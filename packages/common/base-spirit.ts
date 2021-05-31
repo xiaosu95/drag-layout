@@ -1,6 +1,7 @@
 import { ContainerSpirit } from "@/spirit/container-spirit";
 import { ISpiritConfig, ISpiritParams, SpiritType } from "@/types/config";
 import { DragLayout } from '../index';
+import { throttle } from '../utils/common';
 let uid = 0
 export class BaseSpirit {
   uid = uid++
@@ -18,7 +19,15 @@ export class BaseSpirit {
   background = ''
   _active = false
   resizableEl = document.createElement('div')
-  parentSpirit: ContainerSpirit
+  _parentSpirit: ContainerSpirit
+  
+  get parentSpirit () {
+    return this._parentSpirit
+  }
+  set parentSpirit (s: ContainerSpirit) {
+    this._parentSpirit = s
+    s ? this.el.setAttribute('data-parent-uid', String(s.uid)) : this.el.removeAttribute('data-parent-uid')
+  }
 
 
   get active () {
@@ -93,9 +102,9 @@ export class BaseSpirit {
   initResizableEl () {
     this.resizableEl.className = 'drag_layout_resizable'
     this.resizableEl.innerHTML = `
-      <span class="drag_layout_resizable_bottom" data-resizable="bottom" />
-      <span class="drag_layout_resizable_right" data-resizable="right" />
-      <span class="drag_layout_resizable_right" data-resizable="corner" />
+      <span class="drag_layout_resizable_s" data-resizable="s"></span>
+      <span class="drag_layout_resizable_e" data-resizable="e"></span>
+      <span class="drag_layout_resizable_se" data-resizable="se"></span>
     `
     this.el.appendChild(this.resizableEl)
   }
@@ -119,10 +128,10 @@ export class BaseSpirit {
       else if (w > maxW) {
         w = maxW
       }
-      if (type === 'bottom' || type === 'corner') {
+      if (type === 's' || type === 'se') {
         this.config.height = `${h}px`
       }
-      if (type === 'corner' || type === 'right') {
+      if (type === 'se' || type === 'e') {
         this.config.width = `${w}px`
       }
       this.updateStyle()
@@ -143,7 +152,7 @@ export class BaseSpirit {
     const disY = event.clientY - this.config.top
     this.screen.createCopySpirit(this)
     this.active = true
-    const onmousemove = (ev: MouseEvent) => {
+    const onmousemove = throttle((ev: MouseEvent) => {
       const clientX = ev.clientX
       const clientY = ev.clientY
       let l = clientX - disX
@@ -152,7 +161,7 @@ export class BaseSpirit {
       this.screen.copySpirit.config.left = l
       this.screen.copySpirit.updateStyle()
       this.screen.checkNewSort(this)
-    }
+    }, 20)
     const clear = () => {
       this.screen.removeCopySpirit()
       this.active = false
@@ -175,17 +184,20 @@ export class BaseSpirit {
 
   addParentSpirit (spirit: ContainerSpirit) {
     this.parentSpirit = spirit
-    spirit.childrens.push(this)
     this.sort = spirit.childrens.length
+    this.followParentPosition()
+    spirit.childrens.push(this)
+    spirit.updateStyle()
   }
 
   followParentPosition () {
     if (this.parentSpirit) {
       const { config: {left, top}, clientHeight, clientWidth } = this.parentSpirit
       const prev = this.parentSpirit.childrens[this.sort - 1]
-      const needNewline = !prev || prev.rightPosition + this.clientWidth > clientWidth
-      this.config.left = needNewline ? left : prev.rightPosition
-      // this.config.top = prev ? needNewline ? prev.bottomPosition :  : left + prev.config.left
+      this.config.left = prev ? prev.rightPosition : left
+      this.config.top = top
+      this.config.width = `${100 / this.parentSpirit.childrens.length}%`
+      this.updateStyle()
     }
   }
 

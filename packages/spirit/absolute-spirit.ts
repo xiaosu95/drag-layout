@@ -7,9 +7,15 @@ export class AbsoluteSpirit extends BaseSpirit {
   constructor (option: Partial<ISpiritParams> = {}, dragLayout: DragLayout) {
     super(option, dragLayout)
     this.el.className = 'absolute_spirit'
+    this.config.position = 'absolute'
   }
 
   handleMousedown (event: MouseEvent) {
+    if ((event.target as any).getAttribute('data-resizable')) {
+      this.handleResizable(event)
+      return
+    }
+
     const disX = event.clientX - this.config.left
     const disY = event.clientY - this.config.top
     this.active = true

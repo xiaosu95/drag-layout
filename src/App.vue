@@ -36,6 +36,10 @@ export default class App extends Vue {
       height: "200px"
     });
     d.addSpirit({
+      height: "100px",
+      type: "container"
+    });
+    d.addSpirit({
       height: "100px"
     });
     d.addSpirit({

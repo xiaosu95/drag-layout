@@ -19,7 +19,7 @@ export class DragLayout {
   }
 
   get relativeSpirits () {
-    return this.spirits.filter(ele => ele.config.position === 'relative').sort((a, b) => a.sort - b.sort)
+    return this.spirits.filter(ele => ele.config.position === 'relative' && !ele.parentSpirit).sort((a, b) => a.sort - b.sort)
   }
 
   get activeSpirit () {
