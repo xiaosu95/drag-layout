@@ -1,6 +1,7 @@
 import { DragLayout } from '../index'
 export class Panel {
   el = document.createElement('div')
+  wheelDeltaY = 0
 
   get screen () {
     return this.dragLayout.scrren
@@ -16,7 +17,7 @@ export class Panel {
     this.el.onwheel = (event: WheelEvent) =>{
       this.screen.config.top -= event.deltaY
       this.screen.updateStyle()
-      this.screen.wheelDeltaY += event.deltaY
+      this.wheelDeltaY += event.deltaY
     }
     this.el.onmousedown = (event: MouseEvent) => {
       const disX = event.clientX - this.screen.config.left

@@ -1,6 +1,5 @@
-import { BaseSpirit } from "@/common/base-spirit";
-
-export type DomMode = 'flex' | 'absolute'
+export type DomMode = 'flex' | 'absolute';
+export type SpiritType = 'absolute' | 'relative' | 'fixed' | 'container';
 export interface IDomConfig {
   width: string;
   height: string;
@@ -13,12 +12,13 @@ export interface ISpiritParams {
   width: string;
   height: string;
   mode: DomMode;
-  position: 'absolute' | 'relative' | 'fixed';
+  type?: 'absolute' | 'relative' | 'fixed' | 'container';
 }
 
 export interface ISpiritConfig extends ISpiritParams {
   left: number;
   top: number;
+  position: 'absolute' | 'relative' | 'fixed';
 }
 
 export interface IScreenConfig {

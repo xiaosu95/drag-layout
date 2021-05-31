@@ -5,10 +5,12 @@ import { AbsoluteSpirit } from './spirit/absolute-spirit'
 import { FixedSpirit } from './spirit/fixed-spirit'
 import { Panel } from "./utils/panel";
 import './less/index.less';
+import { ContainerSpirit } from "./spirit/container-spirit";
+import { Spirit } from "./types";
 export class DragLayout {
   scrren: Screen
   panel: Panel
-  spirits: BaseSpirit[] = []
+  spirits: Spirit[] = []
   constructor (option: IConfig) {
     this.panel = new Panel(option.boxEle, this)
     this.scrren = new Screen({
@@ -18,6 +20,10 @@ export class DragLayout {
 
   get relativeSpirits () {
     return this.spirits.filter(ele => ele.config.position === 'relative').sort((a, b) => a.sort - b.sort)
+  }
+
+  get activeSpirit () {
+    return this.spirits.find(ele => ele.active)
   }
 
   getSpiritPosition (spirit:BaseSpirit) {
@@ -38,13 +44,16 @@ export class DragLayout {
   }
 
   addSpirit (option: Partial<ISpiritParams>, prevSpirit?: BaseSpirit) {
-    let s: BaseSpirit
-    switch (option.position) {
+    let s: Spirit
+    switch (option.type) {
       case 'absolute':
         s = new AbsoluteSpirit(option, this)
         break;
       case 'fixed':
         s = new FixedSpirit(option, this)
+        break;
+      case 'container':
+        s = new ContainerSpirit(option, this)
         break;
       default:
         s = new BaseSpirit(option, this)
@@ -72,5 +81,9 @@ export class DragLayout {
 
   checkPosition () {
 
+  }
+
+  getSpirit (uid: number) {
+    return this.spirits.find(ele => ele.uid === uid)
   }
 }

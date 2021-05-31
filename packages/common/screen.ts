@@ -3,6 +3,7 @@ import { CopySpirit } from "@/spirit/copy-spirit";
 import { DragLayout } from "..";
 import { BaseSpirit } from "./base-spirit";
 import { getSpiritDom } from "@/utils/common";
+import { ContainerSpirit } from "@/spirit/container-spirit";
 
 export class Screen {
   threshold = 40
@@ -16,6 +17,14 @@ export class Screen {
   }
   copySpirit: BaseSpirit | undefined = undefined
   wheelDeltaY = 0 // 滚动y值
+
+  get clientHeight () {
+    return this.el.clientHeight
+  }
+
+  get clientWidth () {
+    return this.el.clientWidth
+  }
 
   get style () {
     const { width, height, left, top } = this.config
@@ -32,6 +41,10 @@ export class Screen {
 
   get screenHeight () {
     return this.relativeSpirits.reduce((a, b) => a + b.clientHeight, 0)
+  }
+
+  get panel () {
+    return this.dragLayout.panel
   }
 
   constructor (option:Partial<IScreenConfig>, private dragLayout: DragLayout) {
@@ -57,50 +70,10 @@ export class Screen {
     e.preventDefault()
     e.stopPropagation()
     const spiritDom = getSpiritDom(e.target as HTMLElement)
-    console.log(spiritDom)
     const target = this.dragLayout.spirits.find(ele => ele.el === spiritDom)
-    this.wheelDeltaY = 0
+    this.panel.wheelDeltaY = 0
     if (target) {
-      const disX = e.clientX - target.config.left
-      const disY = e.clientY - target.config.top
-      target.active = true
-      switch (target.config.position) {
-        case 'absolute':
-          document.onmousemove = (ev: MouseEvent) => {
-            const clientX = ev.clientX
-            const clientY = ev.clientY
-            let l = clientX - disX
-            let t = clientY - disY + this.wheelDeltaY
-            const maxL = this.el.clientWidth - target.clientWidth
-            const maxT = this.el.clientHeight - target.clientHeight
-            if (l > maxL) l = maxL
-            if (l < 0) l = 0
-            if (t > maxT) t = maxT
-            if (t < 0) t = 0
-            target.config.top = t
-            target.config.left = l
-            target.updateStyle()
-          }
-          break;
-        default:
-          this.createCopySpirit(target)
-          document.onmousemove = (ev: MouseEvent) => {
-            const clientX = ev.clientX
-            const clientY = ev.clientY
-            let l = clientX - disX
-            let t = clientY - disY + this.wheelDeltaY
-            this.copySpirit.config.top = t
-            this.copySpirit.config.left = l
-            this.copySpirit.updateStyle()
-            this.checkNewSort(target)
-          }
-          break;
-      }
-      document.onmouseup = () => {
-        document.onmouseup = document.onmousemove = null
-        this.removeCopySpirit()
-        target.active = false
-      }
+      target.handleMousedown(e)
     }
   }
 
@@ -125,7 +98,12 @@ export class Screen {
     if (this.copySpirit) {
       const s = this.relativeSpirits.find(ele => ele !== target && Math.abs(ele.config.top - this.copySpirit.config.top) < this.threshold)
       if (s) {
-        target.sort = s.sort - .5
+        if (s.type === 'relative') {
+          target.sort = s.sort - .5
+        } else if (s.type === 'container') {
+          const cs = s as ContainerSpirit
+          cs.checkCanInsert()
+        }
       } else {
         const lastSpirit = this.relativeSpirits[this.relativeSpirits.length - 1]
         if (lastSpirit !== target && Math.abs(lastSpirit.bottomPosition - this.copySpirit.config.top) < this.threshold) {

@@ -59,11 +59,11 @@ export default class App extends Vue {
     d.addSpirit({
       height: "100px"
     });
-    
+
     d.addSpirit({
       height: "100px",
       width: "100px",
-      position: "absolute"
+      type: "absolute"
     });
   }
 }
