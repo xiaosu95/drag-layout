@@ -1,0 +1,45 @@
+.drag_layout_screen {
+  position: relative;
+  width: 375px;
+  margin: 0 auto;
+  box-shadow: rgba(0, 0, 0, 0.2) 2px 0px 10px;
+  border: 5px solid #fff;
+  box-sizing: content-box;
+}
+.drag_layout_pannel {
+  width: 100%;
+  height: 100%;
+  padding: 5px;
+}
+.drag_spirit {
+  transition: transform 0.5s;
+  box-sizing: border-box;
+  &:hover {
+    outline: #f55 2px solid;
+    z-index: 1000;
+  }
+  &[data-active="true"] {
+    opacity: 0.5;
+  }
+}
+
+.drag_layout_resizable {
+  span {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 50%;
+    margin-left: -10px;
+    cursor: ns-resize;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOiNmZmZmZmYwMCIgd2lkdGg9IjYiIGhlaWdodD0iNiI+PHBhdGggZD0iTTYgNkgwVjQuMmg0LjJWMEg2djZ6IiBvcGFjaXR5PSIuMzAyIi8+PC9zdmc+);
+    background-position: 100% 100%;
+    padding: 0 3px 3px 0;
+    background-repeat: no-repeat;
+    background-origin: content-box;
+    box-sizing: border-box;
+  }
+  .drag_layout_resizable_bottom {
+    bottom: 0;
+    transform: rotate(45deg);
+  }
+}
