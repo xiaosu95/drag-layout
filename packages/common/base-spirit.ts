@@ -6,6 +6,7 @@ let uid = 0
 export class BaseSpirit {
   uid = uid++
   sort = 0
+  subSort = 0
   type: SpiritType = 'relative'
   config: ISpiritConfig = {
     width: '100%',
@@ -72,9 +73,6 @@ export class BaseSpirit {
   }
 
   get style () {
-    if (!this.background) {
-      this.background = `RGBA(${Math.floor(255 * Math.random())}, ${Math.floor(255 * Math.random())}, ${Math.floor(255 * Math.random())})`
-    }
     const { width, height, top, left } = this.config
     return `
       width: ${width};
@@ -97,6 +95,7 @@ export class BaseSpirit {
     this.updateStyle()
     this.el.className = 'drag_spirit'
     this.el.setAttribute('data-uid', String(this.uid))
+    this.background = `RGBA(${Math.floor(255 * Math.random())}, ${Math.floor(255 * Math.random())}, ${Math.floor(255 * Math.random())})`
   }
 
   initResizableEl () {
@@ -135,7 +134,7 @@ export class BaseSpirit {
         this.config.width = `${w}px`
       }
       this.updateStyle()
-      this.dragLayout.resetPosition()
+      this.dragLayout.updateAllStyle()
     }
     document.onmouseup = () => {
       document.onmouseup = document.onmousemove = null
@@ -178,25 +177,29 @@ export class BaseSpirit {
       if (idx !== -1) {
         this.parentSpirit.childrens.splice(idx, 1)
       }
+      this.parentSpirit = undefined
+      this.config.left = 0
+      this.config.width = '100%'
+      this.dragLayout.updateAllStyle()
     }
-    this.parentSpirit = undefined
   }
 
   addParentSpirit (spirit: ContainerSpirit) {
     this.parentSpirit = spirit
-    this.sort = spirit.childrens.length
-    this.followParentPosition()
+    this.subSort = spirit.childrens.length
+    this.followParentStyle()
     spirit.childrens.push(this)
-    spirit.updateStyle()
+    this.dragLayout.updateAllStyle()
   }
-
-  followParentPosition () {
+  
+  followParentStyle () {
     if (this.parentSpirit) {
-      const { config: {left, top}, clientHeight, clientWidth } = this.parentSpirit
-      const prev = this.parentSpirit.childrens[this.sort - 1]
+      const { config: {left, top, height}, clientHeight, clientWidth } = this.parentSpirit
+      const prev = this.parentSpirit.childrens[this.subSort - 1]
       this.config.left = prev ? prev.rightPosition : left
       this.config.top = top
       this.config.width = `${100 / this.parentSpirit.childrens.length}%`
+      this.config.height = height
       this.updateStyle()
     }
   }

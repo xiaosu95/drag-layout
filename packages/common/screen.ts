@@ -15,7 +15,7 @@ export class Screen {
     left: 0,
     top: 0,
   }
-  copySpirit: BaseSpirit | undefined = undefined
+  copySpirit: CopySpirit = undefined
   wheelDeltaY = 0 // 滚动y值
 
   get clientHeight () {
@@ -78,12 +78,7 @@ export class Screen {
   }
 
   createCopySpirit (spirit: BaseSpirit) {
-    this.copySpirit = new CopySpirit({}, this.dragLayout)
-    this.copySpirit.el.innerHTML = spirit.el.innerHTML
-    this.copySpirit.config = {
-      ...spirit.config
-    }
-    this.copySpirit.updateStyle()
+    this.copySpirit = new CopySpirit({}, this.dragLayout, spirit)
     this.el.appendChild(this.copySpirit.el)
   }
 
@@ -96,13 +91,20 @@ export class Screen {
 
   checkNewSort (target: BaseSpirit) {
     if (this.copySpirit) {
-      const s = this.relativeSpirits.find(ele => ele !== target && Math.abs(ele.config.top - this.copySpirit.config.top) < this.threshold)
+      // 处理容器
+      for (let index = 0; index < this.dragLayout.containerSpirits.length; index++) {
+        if (this.dragLayout.containerSpirits[index].checkCanInsert()) {
+          return
+        }
+      }
+      const s = this.relativeSpirits.find(ele => {
+        const offset = ele.config.top - this.copySpirit.config.top
+        return ele !== target && offset > 0 && offset < this.threshold
+      })
       if (s) {
-        if (s.type === 'relative') {
+        if (s.type === 'relative' || s.type === 'container') {
+          target.removeParentSpirit()
           target.sort = s.sort - .5
-        } else if (s.type === 'container') {
-          const cs = s as ContainerSpirit
-          cs.checkCanInsert()
         }
       } else {
         const lastSpirit = this.relativeSpirits[this.relativeSpirits.length - 1]
@@ -110,7 +112,7 @@ export class Screen {
           target.sort = lastSpirit.sort + .5
         }
       }
-      this.dragLayout.resetPosition()
+      this.dragLayout.updateAllStyle()
       this.dragLayout.calculateSort()
     }
   }

@@ -23,7 +23,14 @@
   }
   &[data-parent-uid] {
     z-index: 80;
+    .drag_layout_resizable {
+      display: none;
+    }
   }
+}
+.container_spirit {
+  transition: transform 0.5s;
+  border: 2px #ddd dashed;
 }
 .absolute_spirit {
   z-index: 100;
@@ -35,6 +42,7 @@
 .drag_layout_resizable {
   span {
     position: absolute;
+    z-index: 1000;
     width: 20px;
     height: 20px;
     margin-left: -10px;

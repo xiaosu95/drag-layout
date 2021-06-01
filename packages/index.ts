@@ -26,6 +26,10 @@ export class DragLayout {
     return this.spirits.find(ele => ele.active)
   }
 
+  get containerSpirits (): ContainerSpirit[] {
+    return this.spirits.filter(ele => ele.type === 'container') as ContainerSpirit[]
+  }
+
   getSpiritPosition (spirit:BaseSpirit) {
     return {
       top: spirit.bottomPosition,
@@ -33,7 +37,7 @@ export class DragLayout {
     }
   }
 
-  resetPosition () {
+  updateAllStyle () {
     this.relativeSpirits.sort((a, b) => a.sort - b.sort)
     this.relativeSpirits.forEach((ele, idx) => {
       const prev = this.relativeSpirits[idx - 1]

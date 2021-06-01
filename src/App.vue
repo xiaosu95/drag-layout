@@ -3,7 +3,7 @@
     <el-container class="container">
       <el-header class="header">
         <h1>
-          拖拽
+          test
         </h1>
       </el-header>
       <el-container class="el-container_b">
@@ -41,6 +41,10 @@ export default class App extends Vue {
     });
     d.addSpirit({
       height: "100px"
+    });
+    d.addSpirit({
+      height: "150px",
+      type: "container"
     });
     d.addSpirit({
       height: "100px"
