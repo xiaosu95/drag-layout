@@ -1,5 +1,5 @@
 export type DomMode = 'flex' | 'absolute';
-export type SpiritType = 'absolute' | 'relative' | 'fixed' | 'container';
+export type SpiritType = 'absolute' | 'relative' | 'fixed' | 'container' | 'flex';
 export interface IDomConfig {
   width: string;
   height: string;
@@ -12,7 +12,7 @@ export interface ISpiritParams {
   width: string;
   height: string;
   mode: DomMode;
-  type?: 'absolute' | 'relative' | 'fixed' | 'container';
+  type?: SpiritType;
 }
 
 export interface ISpiritConfig extends ISpiritParams {

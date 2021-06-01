@@ -8,7 +8,7 @@ export class ContainerSpirit extends BaseSpirit {
   constructor (option: Partial<ISpiritParams> = {}, dragLayout: DragLayout) {
     super(option, dragLayout)
     this.el.className = 'container_spirit'
-    this.background = '#fff'
+    this.background = 'linear-gradient(45deg, black, transparent)'
   }
 
   handleMousedown (event: MouseEvent) {
@@ -17,10 +17,20 @@ export class ContainerSpirit extends BaseSpirit {
 
   updateStyle () {
     super.updateStyle()
+    this.syncChildrensStyle()
+  }
+  
+  syncChildrensStyle () {
     if (this.childrens) {
       this.calculateChildSort()
-      this.childrens.forEach(ele => {
-        ele.followParentStyle()
+      this.childrens.forEach((ele, idx) => {
+        const { config: {left, top, height}, clientHeight, clientWidth } = this
+        const prev = this.childrens[idx - 1]
+        ele.config.left = prev ? prev.rightPosition : left
+        ele.config.top = top
+        ele.config.width = `${100 / this.childrens.length}%`
+        ele.config.height = height
+        ele.updateStyle()
       })
     }
   }

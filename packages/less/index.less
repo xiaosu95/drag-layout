@@ -21,16 +21,18 @@
   &[data-active="true"] {
     opacity: 0.5;
   }
-  &[data-parent-uid] {
+  &[data-parent-type="container"] {
     z-index: 80;
     .drag_layout_resizable {
       display: none;
     }
   }
+  &[data-parent-type="flex"] {
+    z-index: 80;
+  }
 }
-.container_spirit {
+.container_spirit, .flex_spirit {
   transition: transform 0.5s;
-  border: 2px #ddd dashed;
 }
 .absolute_spirit {
   z-index: 100;

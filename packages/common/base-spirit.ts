@@ -21,13 +21,14 @@ export class BaseSpirit {
   _active = false
   resizableEl = document.createElement('div')
   _parentSpirit: ContainerSpirit
+  line = 0
   
   get parentSpirit () {
     return this._parentSpirit
   }
   set parentSpirit (s: ContainerSpirit) {
     this._parentSpirit = s
-    s ? this.el.setAttribute('data-parent-uid', String(s.uid)) : this.el.removeAttribute('data-parent-uid')
+    s ? this.el.setAttribute('data-parent-type', s.type) : this.el.removeAttribute('data-parent-uid')
   }
 
 
@@ -177,9 +178,11 @@ export class BaseSpirit {
       if (idx !== -1) {
         this.parentSpirit.childrens.splice(idx, 1)
       }
+      if (this.parentSpirit.type === 'container') {
+        // this.config.width = '100%'
+      }
       this.parentSpirit = undefined
       this.config.left = 0
-      this.config.width = '100%'
       this.dragLayout.updateAllStyle()
     }
   }
@@ -187,22 +190,22 @@ export class BaseSpirit {
   addParentSpirit (spirit: ContainerSpirit) {
     this.parentSpirit = spirit
     this.subSort = spirit.childrens.length
-    this.followParentStyle()
+    // this.followParentStyle()
     spirit.childrens.push(this)
     this.dragLayout.updateAllStyle()
   }
   
-  followParentStyle () {
-    if (this.parentSpirit) {
-      const { config: {left, top, height}, clientHeight, clientWidth } = this.parentSpirit
-      const prev = this.parentSpirit.childrens[this.subSort - 1]
-      this.config.left = prev ? prev.rightPosition : left
-      this.config.top = top
-      this.config.width = `${100 / this.parentSpirit.childrens.length}%`
-      this.config.height = height
-      this.updateStyle()
-    }
-  }
+  // followParentStyle () {
+  //   if (this.parentSpirit) {
+  //     const { config: {left, top, height}, clientHeight, clientWidth } = this.parentSpirit
+  //     const prev = this.parentSpirit.childrens[this.subSort - 1]
+  //     this.config.left = prev ? prev.rightPosition : left
+  //     this.config.top = top
+  //     this.config.width = `${100 / this.parentSpirit.childrens.length}%`
+  //     this.config.height = height
+  //     this.updateStyle()
+  //   }
+  // }
 
   destroy () {
     this.el.remove();

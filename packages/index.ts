@@ -7,6 +7,7 @@ import { Panel } from "./utils/panel";
 import './less/index.less';
 import { ContainerSpirit } from "./spirit/container-spirit";
 import { Spirit } from "./types";
+import { FlexSpirit } from "./spirit/flex-spirit";
 export class DragLayout {
   scrren: Screen
   panel: Panel
@@ -27,7 +28,7 @@ export class DragLayout {
   }
 
   get containerSpirits (): ContainerSpirit[] {
-    return this.spirits.filter(ele => ele.type === 'container') as ContainerSpirit[]
+    return this.spirits.filter(ele => ele.type === 'container' || ele.type === 'flex') as ContainerSpirit[]
   }
 
   getSpiritPosition (spirit:BaseSpirit) {
@@ -58,6 +59,9 @@ export class DragLayout {
         break;
       case 'container':
         s = new ContainerSpirit(option, this)
+        break;
+      case 'flex':
+        s = new FlexSpirit(option, this)
         break;
       default:
         s = new BaseSpirit(option, this)

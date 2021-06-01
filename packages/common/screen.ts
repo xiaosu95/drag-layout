@@ -102,7 +102,7 @@ export class Screen {
         return ele !== target && offset > 0 && offset < this.threshold
       })
       if (s) {
-        if (s.type === 'relative' || s.type === 'container') {
+        if (s.type === 'relative' || s.type === 'container' || s.type === 'flex') {
           target.removeParentSpirit()
           target.sort = s.sort - .5
         }
