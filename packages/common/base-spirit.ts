@@ -2,8 +2,9 @@ import { ContainerSpirit } from "@/spirit/container-spirit";
 import { ISpiritConfig, ISpiritParams, SpiritType } from "@/types/config";
 import { DragLayout } from '../index';
 import { throttle } from '../utils/common';
+import { Base } from "./base";
 let uid = 0
-export class BaseSpirit {
+export class BaseSpirit extends Base {
   uid = uid++
   sort = 0
   subSort = 0
@@ -16,7 +17,6 @@ export class BaseSpirit {
     top: 0,
     position: 'relative',
   }
-  el: HTMLDivElement = document.createElement('div')
   background = ''
   _active = false
   resizableEl = document.createElement('div')
@@ -49,22 +49,6 @@ export class BaseSpirit {
     return this.config.left + this.el.clientWidth
   }
 
-  get clientHeight () {
-    return this.el.clientHeight
-  }
-
-  get clientWidth () {
-    return this.el.clientWidth
-  }
-
-  get screen () {
-    return this.dragLayout.scrren
-  }
-
-  get panel () {
-    return this.dragLayout.panel
-  }
-
   get centerLineX () {
     return (this.clientWidth / 2) + this.config.left
   }
@@ -78,19 +62,13 @@ export class BaseSpirit {
     return `
       width: ${width};
       height: ${height};
-      left: 0;
-      top: 0;
-      position: absolute;
       transform: translate(${left}px, ${top}px);
-      background: ${this.background}
+      background: ${this.background};
     `
   }
 
-  get globalConfig () {
-    return this.dragLayout.config
-  }
-
-  constructor (option: Partial<ISpiritParams> = {}, public dragLayout: DragLayout) {
+  constructor (option: Partial<ISpiritParams> = {}, dragLayout: DragLayout) {
+    super(dragLayout)
     this.config = {
       ...this.config,
       ...option,

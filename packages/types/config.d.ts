@@ -30,5 +30,8 @@ export interface IScreenConfig {
 }
 
 export interface IConfig {
-  threshold?: number;
+  threshold: number;
+  adsorptionThreshold: number;
+  adsorption: boolean;
+  fixedViewMode: boolean;
 }

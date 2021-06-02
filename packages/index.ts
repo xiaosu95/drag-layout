@@ -8,17 +8,26 @@ import './less/index.less';
 import { ContainerSpirit } from "./spirit/container-spirit";
 import { Spirit } from "./types";
 import { FlexSpirit } from "./spirit/flex-spirit";
+import { Coordinates } from "./utils/coordinates";
+import { MarkLine } from "./utils/markline";
 export class DragLayout {
   scrren: Screen
   panel: Panel
   spirits: Spirit[] = []
+  coordinates: Coordinates
+  markLine: MarkLine
   constructor (boxEle: HTMLDivElement, public config: Partial<IConfig> = {
-    threshold: 40
+    threshold: 40,
+    adsorptionThreshold: 10,
+    adsorption: true,
+    fixedViewMode: false
   }) {
     this.panel = new Panel(boxEle, this)
     this.scrren = new Screen({
       boxEle: this.panel.el
     }, this)
+    this.coordinates = new Coordinates(this)
+    this.markLine = new MarkLine(this)
   }
 
   get relativeSpirits () {
@@ -31,6 +40,13 @@ export class DragLayout {
 
   get containerSpirits (): ContainerSpirit[] {
     return this.spirits.filter(ele => ele.type === 'container' || ele.type === 'flex') as ContainerSpirit[]
+  }
+
+  get allSpiritCoordinates () {
+    return {
+      x: [...this.spirits.map(ele => ele.config.left), ...this.spirits.map(ele => ele.rightPosition)],
+      y: [...this.spirits.map(ele => ele.config.top), ...this.spirits.map(ele => ele.bottomPosition)]
+    }
   }
 
   getSpiritPosition (spirit:BaseSpirit) {

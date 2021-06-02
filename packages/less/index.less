@@ -1,15 +1,35 @@
 .drag_layout_screen {
   position: relative;
   width: 375px;
-  margin: 0 auto;
+  // margin: 0 auto;
   box-shadow: rgba(0, 0, 0, 0.2) 2px 0px 10px;
   border: 5px solid #fff;
   box-sizing: content-box;
+}
+.drag_spirit, .container_spirit, .flex_spirit, .drag_layout_coordinates_x, .drag_layout_coordinates_y, .drag_layout_mark_line_x, .drag_layout_mark_line_y, .absolute_spirit, .drag_layout_mark_line_adsorption_y, .drag_layout_mark_line_adsorption_x {
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 .drag_layout_pannel {
   width: 100%;
   height: 100%;
   padding: 5px;
+  .drag_layout_top_bar, .drag_layout_left_bar {
+    position: absolute;
+    background: #fff;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+  }
+  .drag_layout_top_bar {
+    height: 22px;
+    width: 100%;
+  }
+  .drag_layout_left_bar {
+    width: 50px;
+    height: 100%;
+  }
 }
 .drag_spirit {
   transition: transform 0.5s;
@@ -33,7 +53,8 @@
 }
 .container_spirit, .flex_spirit {
   transition: transform 0.5s;
-  &[data-active="false"] {
+  &[data-active="true"] {
+    z-index: 1000;
     .drag_layout_auxiliary_drag {
       display: none;
     }
@@ -60,12 +81,11 @@
 }
 .copy_spirit {
   z-index: 1000;
-} 
+}
 
 .drag_layout_resizable {
   span {
     position: absolute;
-    z-index: 1000;
     width: 20px;
     height: 20px;
     margin-left: -10px;
@@ -92,5 +112,37 @@
     bottom: 0;
     right: 0;
     cursor: se-resize;
+  }
+}
+
+.drag_layout_mark_line {
+  display: none;
+  &[data-show] {
+    display: block;
+  }
+}
+.drag_layout_mark_line_adsorption_y, .drag_layout_mark_line_adsorption_x {
+  display: none;
+  z-index: 1000;
+}
+.drag_layout_mark_line_y, .drag_layout_mark_line_adsorption_y {
+  height: 100%;
+  width: 1px;
+  background: #88f;
+}
+.drag_layout_mark_line_x, .drag_layout_mark_line_adsorption_x {
+  height: 1px;
+  width: 100%;
+  background: #88f;
+}
+
+.drag_layout_coordinates {
+  .drag_layout_coordinates_x, .drag_layout_coordinates_y {
+    z-index: 2000;
+  }
+  p {
+    color: #5E5E5E;
+    text-align: right;
+    font-size: 12px;
   }
 }

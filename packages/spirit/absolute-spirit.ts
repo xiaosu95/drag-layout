@@ -19,6 +19,7 @@ export class AbsoluteSpirit extends BaseSpirit {
     const disX = event.clientX - this.config.left
     const disY = event.clientY - this.config.top
     this.active = true
+    this.markLine.show()
     const onmousemove = (ev: MouseEvent) => {
       const clientX = ev.clientX
       const clientY = ev.clientY
@@ -33,14 +34,51 @@ export class AbsoluteSpirit extends BaseSpirit {
       this.config.top = t
       this.config.left = l
       this.updateStyle()
+      this.markLine.updateStyle()
+      this.checkAdsorption()
     }
 
     const clear = () => {
       this.active = false
+      if (this.markLine.adsorptionX) {
+        this.config.left = this.markLine.adsorptionX
+      }
+      if (this.markLine.adsorptionY) {
+        this.config.top = this.markLine.adsorptionY
+      }
+      this.markLine.hide()
+      this.updateStyle()
       document.removeEventListener('mousemove', onmousemove)
       document.removeEventListener('mouseup', clear)
     }
     document.addEventListener('mousemove', onmousemove)
     document.addEventListener('mouseup', clear)
+  }
+
+  checkAdsorption () {
+    const allSpiritCoordinates = this.dragLayout.allSpiritCoordinates
+    let x = Infinity
+    let y = Infinity
+    for (let index = 0; index < allSpiritCoordinates.x.length; index++) {
+      const elementX = allSpiritCoordinates.x[index];
+      const elementY = allSpiritCoordinates.y[index];
+      if (elementX < this.config.left && this.config.left - elementX < this.globalConfig.adsorptionThreshold) {
+        if (x > elementX) x = elementX
+      }
+      if (elementY < this.config.top && this.config.top - elementY < this.globalConfig.adsorptionThreshold) {
+        if (y > elementY) y = elementY
+      }
+    }
+    if (x !== Infinity) {
+      this.markLine.showAdsorptionYEl(x)
+    } else {
+      this.markLine.hideAdsorptionYEl()
+    }
+    if (y !== Infinity) {
+      this.markLine.showAdsorptionXEl(y)
+      this.config.top = y
+    } else {
+      this.markLine.hideAdsorptionXEl()
+    }
   }
 }

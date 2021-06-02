@@ -3,11 +3,9 @@ import { CopySpirit } from "@/spirit/copy-spirit";
 import { DragLayout } from "..";
 import { BaseSpirit } from "./base-spirit";
 import { getSpiritDom } from "@/utils/common";
-import { ContainerSpirit } from "@/spirit/container-spirit";
+import { Base } from "./base";
 
-export class Screen {
-  threshold = 40
-  el = document.createElement('div')
+export class Screen extends Base {
   config: IScreenConfig = {
     width: '375px',
     height: '100%',
@@ -18,14 +16,6 @@ export class Screen {
   copySpirit: CopySpirit = undefined
   wheelDeltaY = 0 // 滚动y值
 
-  get clientHeight () {
-    return this.el.clientHeight
-  }
-
-  get clientWidth () {
-    return this.el.clientWidth
-  }
-
   get style () {
     const { width, height, left, top } = this.config
     return `
@@ -35,23 +25,8 @@ export class Screen {
     `
   }
 
-  get relativeSpirits () {
-    return this.dragLayout.relativeSpirits
-  }
-
-  get screenHeight () {
-    return this.relativeSpirits.reduce((a, b) => a + b.clientHeight, 0)
-  }
-
-  get panel () {
-    return this.dragLayout.panel
-  }
-
-  get globalConfig () {
-    return this.dragLayout.config
-  }
-
-  constructor (option:Partial<IScreenConfig>, private dragLayout: DragLayout) {
+  constructor (option:Partial<IScreenConfig>, dragLayout: DragLayout) {
+    super(dragLayout)
     this.config = {
       ...this.config,
       ...option,
@@ -64,6 +39,7 @@ export class Screen {
 
   updateStyle () {
     this.el.setAttribute('style', this.style)
+    this.coordinates && this.coordinates.updateStyle()
   }
 
   initEvent () {
@@ -96,11 +72,13 @@ export class Screen {
   checkNewSort (target: BaseSpirit) {
     if (this.copySpirit) {
       // 处理容器
-      for (let index = 0; index < this.dragLayout.containerSpirits.length; index++) {
-        const c = this.dragLayout.containerSpirits[index]
-        if (c.checkCanInsert()) {
-          c.checkNewSort()
-          return
+      if (this.activeSpirit.type === 'relative') {
+        for (let index = 0; index < this.dragLayout.containerSpirits.length; index++) {
+          const c = this.dragLayout.containerSpirits[index]
+          if (c.checkCanInsert()) {
+            c.checkNewSort()
+            return
+          }
         }
       }
       const s = this.relativeSpirits.find(ele => {
