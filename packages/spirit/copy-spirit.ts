@@ -3,7 +3,7 @@ import { ISpiritParams } from "@/types/config";
 import { DragLayout } from "..";
 
 export class CopySpirit extends BaseSpirit {
-  copyUid = 0
+  copyUid = -1
   constructor (option: Partial<ISpiritParams> = {}, dragLayout: DragLayout, spirit: BaseSpirit) {
     super(option, dragLayout)
     this.el.className = 'copy_spirit'

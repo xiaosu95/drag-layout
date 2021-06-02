@@ -33,6 +33,27 @@
 }
 .container_spirit, .flex_spirit {
   transition: transform 0.5s;
+  &[data-active="false"] {
+    .drag_layout_auxiliary_drag {
+      display: none;
+    }
+  }
+  .drag_layout_auxiliary_drag {
+    position: absolute;
+    width: 20px;
+    height: 2px;
+    background: #aaa;
+    left: 100%;
+    top: 50%;
+    span {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      top: -4px;
+      left: 100%;
+      background: #aaa;
+    }
+  }
 }
 .absolute_spirit {
   z-index: 100;

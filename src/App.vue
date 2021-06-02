@@ -26,9 +26,7 @@ import { DragLayout } from "@/index";
 @Component
 export default class App extends Vue {
   mounted() {
-    const d = new DragLayout({
-      boxEle: this.$refs.boxEle as HTMLDivElement
-    });
+    const d = new DragLayout(this.$refs.boxEle as HTMLDivElement);
     d.addSpirit({
       height: "100px"
     });

@@ -5,24 +5,34 @@ import { DragLayout } from "..";
 export class ContainerSpirit extends BaseSpirit {
   type: SpiritType = 'container'
   childrens: BaseSpirit[] = []
+  auxiliaryDragEl = document.createElement('div')
   constructor (option: Partial<ISpiritParams> = {}, dragLayout: DragLayout) {
     super(option, dragLayout)
     this.el.className = 'container_spirit'
     this.background = 'linear-gradient(45deg, black, transparent)'
+    this.initAuxiliaryDrag()
   }
 
   handleMousedown (event: MouseEvent) {
     super.handleMousedown(event)
   }
 
+  initAuxiliaryDrag () {
+    this.auxiliaryDragEl.className = 'drag_layout_auxiliary_drag'
+    this.auxiliaryDragEl.innerHTML = `
+      <span></span>
+    `
+    this.el.appendChild(this.auxiliaryDragEl)
+  }
+
   updateStyle () {
     super.updateStyle()
+    this.childrens && this.childrens.sort((a, b) => a.subSort - b.subSort)
     this.syncChildrensStyle()
   }
   
   syncChildrensStyle () {
     if (this.childrens) {
-      this.calculateChildSort()
       this.childrens.forEach((ele, idx) => {
         const { config: {left, top, height}, clientHeight, clientWidth } = this
         const prev = this.childrens[idx - 1]
@@ -58,5 +68,23 @@ export class ContainerSpirit extends BaseSpirit {
     } else {
       return w
     }
+  }
+
+  checkNewSort () {
+    const { scrren: { copySpirit }, activeSpirit } = this.dragLayout
+    const s = this.childrens.find(ele => {
+      const offset = Math.abs(ele.config.left - copySpirit.config.left)
+      return ele !== activeSpirit && offset < this.globalConfig.threshold && copySpirit.config.top > ele.config.top && copySpirit.config.top < ele.bottomPosition
+    })
+    if (s) {
+      activeSpirit.subSort = s.subSort - .5
+    } else {
+      const lastSpirit = this.childrens[this.childrens.length - 1]
+      if (lastSpirit !== activeSpirit && Math.abs(lastSpirit.rightPosition - copySpirit.config.left) < this.globalConfig.threshold) {
+        activeSpirit.subSort = lastSpirit.subSort + .5
+      }
+    }
+    this.updateStyle()
+    this.calculateChildSort()
   }
 }

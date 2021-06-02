@@ -47,6 +47,10 @@ export class Screen {
     return this.dragLayout.panel
   }
 
+  get globalConfig () {
+    return this.dragLayout.config
+  }
+
   constructor (option:Partial<IScreenConfig>, private dragLayout: DragLayout) {
     this.config = {
       ...this.config,
@@ -93,13 +97,15 @@ export class Screen {
     if (this.copySpirit) {
       // 处理容器
       for (let index = 0; index < this.dragLayout.containerSpirits.length; index++) {
-        if (this.dragLayout.containerSpirits[index].checkCanInsert()) {
+        const c = this.dragLayout.containerSpirits[index]
+        if (c.checkCanInsert()) {
+          c.checkNewSort()
           return
         }
       }
       const s = this.relativeSpirits.find(ele => {
         const offset = ele.config.top - this.copySpirit.config.top
-        return ele !== target && offset > 0 && offset < this.threshold
+        return ele !== target && offset > 0 && offset < this.globalConfig.threshold
       })
       if (s) {
         if (s.type === 'relative' || s.type === 'container' || s.type === 'flex') {
@@ -108,7 +114,7 @@ export class Screen {
         }
       } else {
         const lastSpirit = this.relativeSpirits[this.relativeSpirits.length - 1]
-        if (lastSpirit !== target && Math.abs(lastSpirit.bottomPosition - this.copySpirit.config.top) < this.threshold) {
+        if (lastSpirit !== target && Math.abs(lastSpirit.bottomPosition - this.copySpirit.config.top) < this.globalConfig.threshold) {
           target.sort = lastSpirit.sort + .5
         }
       }

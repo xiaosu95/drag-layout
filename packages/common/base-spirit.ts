@@ -86,6 +86,10 @@ export class BaseSpirit {
     `
   }
 
+  get globalConfig () {
+    return this.dragLayout.config
+  }
+
   constructor (option: Partial<ISpiritParams> = {}, public dragLayout: DragLayout) {
     this.config = {
       ...this.config,

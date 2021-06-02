@@ -31,7 +31,6 @@ export class FlexSpirit extends ContainerSpirit {
   
   syncChildrensStyle () {
     if (this.childrens) {
-      this.calculateChildSort()
       let line = 0
       this.childrens.forEach((ele, idx) => {
         const { config: {left, top, height}, clientHeight, clientWidth } = this
@@ -51,8 +50,6 @@ export class FlexSpirit extends ContainerSpirit {
           ele.config.top = top
         }
         ele.line = line
-        // ele.config.width = `${100 / this.childrens.length}%`
-        // ele.config.height = height
         ele.updateStyle()
       })
       this.config.height = ((this.getchildrenMaxBottom(this.childrens.length) - this.config.top) || 100) + 'px'

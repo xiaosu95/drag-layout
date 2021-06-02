@@ -30,6 +30,5 @@ export interface IScreenConfig {
 }
 
 export interface IConfig {
-  boxEle: HTMLDivElement;
-
+  threshold?: number;
 }

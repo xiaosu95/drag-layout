@@ -12,8 +12,10 @@ export class DragLayout {
   scrren: Screen
   panel: Panel
   spirits: Spirit[] = []
-  constructor (option: IConfig) {
-    this.panel = new Panel(option.boxEle, this)
+  constructor (boxEle: HTMLDivElement, public config: Partial<IConfig> = {
+    threshold: 40
+  }) {
+    this.panel = new Panel(boxEle, this)
     this.scrren = new Screen({
       boxEle: this.panel.el
     }, this)
