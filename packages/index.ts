@@ -21,7 +21,7 @@ export class DragLayout {
     adsorptionThreshold: 10,
     adsorption: true,
     editMode: 'default',
-    firstScreenHeight: 1000
+    firstScreenHeight: 700
   }
   private _activeSpirit: Spirit
   constructor (boxEle: HTMLDivElement, config: Partial<IParams> = {
@@ -75,8 +75,10 @@ export class DragLayout {
   updateAllStyle () {
     this.relativeSpirits.sort((a, b) => a.sort - b.sort)
     this.relativeSpirits.forEach((ele, idx) => {
-      const prev = this.relativeSpirits[idx - 1]
-      ele.config.top = prev ? prev.bottomPosition : 0
+      if (ele.config.position === 'relative') {
+        const prev = this.relativeSpirits[idx - 1]
+        ele.config.top = prev ? prev.bottomPosition : 0
+      }
       ele.updateStyle()
     })
     this.scrren.updateStyle()
@@ -101,10 +103,12 @@ export class DragLayout {
         s = new BaseSpirit(option, this)
         break;
     }
-    if (!prevSpirit) prevSpirit = this.spirits[this.spirits.length - 1]
-    if (prevSpirit) {
-      const position = this.getSpiritPosition(prevSpirit)
-      s.config.top = position.top
+    if (s.config.position === 'relative') {
+      if (!prevSpirit) prevSpirit = this.spirits[this.spirits.length - 1]
+      if (prevSpirit) {
+        const position = this.getSpiritPosition(prevSpirit)
+        s.config.top = position.top
+      }
     }
     s.updateStyle()
     this.spirits.push(s)
