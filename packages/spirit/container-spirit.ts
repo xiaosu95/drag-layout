@@ -30,11 +30,11 @@ export class ContainerSpirit extends BaseSpirit {
     this.childrens && this.childrens.sort((a, b) => a.subSort - b.subSort)
     this.syncChildrensStyle()
   }
-  
+
   syncChildrensStyle () {
     if (this.childrens) {
       this.childrens.forEach((ele, idx) => {
-        const { config: {left, top, height}, clientHeight, clientWidth } = this
+        const { config: { left, top, height } } = this
         const prev = this.childrens[idx - 1]
         ele.config.left = prev ? prev.rightPosition : left
         ele.config.top = top

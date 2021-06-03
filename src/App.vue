@@ -8,7 +8,21 @@
       </el-header>
       <el-container class="el-container_b">
         <el-aside style="width:280px;" class="tool_bar">
-          asdfa
+          <el-switch
+            v-model="editMode"
+            active-value="fixed"
+            inactive-value="default"
+            active-text="首屏模式"
+            @change="changeEditMode"
+            inactive-text="全部内容"
+          >
+          </el-switch>
+          <el-switch
+            v-model="adsorption"
+            active-text="吸附模式"
+            @change="changeAdsorption"
+          >
+          </el-switch>
         </el-aside>
         <el-main>
           <el-card class="box-card">
@@ -25,57 +39,68 @@ import { Component, Vue } from "vue-property-decorator";
 import { DragLayout } from "@/index";
 @Component
 export default class App extends Vue {
+  editMode = "default";
+  adsorption = true;
+  dragLayout: DragLayout;
   mounted() {
-    const d = new DragLayout(this.$refs.boxEle as HTMLDivElement);
-    d.addSpirit({
+    this.dragLayout = new DragLayout(this.$refs.boxEle as HTMLDivElement);
+    this.dragLayout.addSpirit({
       height: "100px"
     });
-    d.addSpirit({
+    this.dragLayout.addSpirit({
       height: "200px"
     });
-    d.addSpirit({
+    this.dragLayout.addSpirit({
       height: "100px",
       type: "flex"
     });
-    d.addSpirit({
+    this.dragLayout.addSpirit({
       height: "100px"
     });
-    d.addSpirit({
+    this.dragLayout.addSpirit({
       height: "150px",
       type: "container"
     });
-    d.addSpirit({
+    this.dragLayout.addSpirit({
       height: "100px"
     });
-    d.addSpirit({
+    this.dragLayout.addSpirit({
       height: "100px"
     });
-    d.addSpirit({
+    this.dragLayout.addSpirit({
       height: "100px"
     });
-    d.addSpirit({
+    this.dragLayout.addSpirit({
       height: "100px"
     });
-    d.addSpirit({
+    this.dragLayout.addSpirit({
       height: "100px"
     });
-    d.addSpirit({
+    this.dragLayout.addSpirit({
       height: "100px"
     });
-    d.addSpirit({
+    this.dragLayout.addSpirit({
       height: "100px"
     });
 
-    d.addSpirit({
+    this.dragLayout.addSpirit({
       height: "100px",
       width: "100px",
       type: "absolute"
     });
-    d.addSpirit({
+    this.dragLayout.addSpirit({
       height: "100px",
       width: "100px",
-      type: "absolute"
+      type: "fixed"
     });
+  }
+
+  changeEditMode(val: any) {
+    this.dragLayout.setEditMode(val);
+  }
+
+  changeAdsorption(bool: boolean) {
+    this.dragLayout.setAdsorption(bool);
   }
 }
 </script>

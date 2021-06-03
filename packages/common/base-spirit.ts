@@ -18,9 +18,9 @@ export class BaseSpirit extends Base {
     position: 'relative',
   }
   background = ''
-  _active = false
+  private _active = false
   resizableEl = document.createElement('div')
-  _parentSpirit: ContainerSpirit
+  private _parentSpirit: ContainerSpirit
   line = 0
   
   get parentSpirit () {
@@ -133,7 +133,6 @@ export class BaseSpirit extends Base {
     const disX = event.clientX - this.config.left
     const disY = event.clientY - this.config.top
     this.screen.createCopySpirit(this)
-    this.active = true
     const onmousemove = throttle((ev: MouseEvent) => {
       const clientX = ev.clientX
       const clientY = ev.clientY
@@ -146,7 +145,6 @@ export class BaseSpirit extends Base {
     }, 20)
     const clear = () => {
       this.screen.removeCopySpirit()
-      this.active = false
       document.removeEventListener('mousemove', onmousemove)
       document.removeEventListener('mouseup', clear)
     }
@@ -176,18 +174,6 @@ export class BaseSpirit extends Base {
     spirit.childrens.push(this)
     this.dragLayout.updateAllStyle()
   }
-  
-  // followParentStyle () {
-  //   if (this.parentSpirit) {
-  //     const { config: {left, top, height}, clientHeight, clientWidth } = this.parentSpirit
-  //     const prev = this.parentSpirit.childrens[this.subSort - 1]
-  //     this.config.left = prev ? prev.rightPosition : left
-  //     this.config.top = top
-  //     this.config.width = `${100 / this.parentSpirit.childrens.length}%`
-  //     this.config.height = height
-  //     this.updateStyle()
-  //   }
-  // }
 
   destroy () {
     this.el.remove();

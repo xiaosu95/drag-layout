@@ -1,4 +1,4 @@
-import { IScreenConfig } from "@/types/config";
+import { EditMode, IScreenConfig } from "@/types/config";
 import { CopySpirit } from "@/spirit/copy-spirit";
 import { DragLayout } from "..";
 import { BaseSpirit } from "./base-spirit";
@@ -6,9 +6,10 @@ import { getSpiritDom } from "@/utils/common";
 import { Base } from "./base";
 
 export class Screen extends Base {
+  maskEl = document.createElement('span')
   config: IScreenConfig = {
     width: '375px',
-    height: '100%',
+    height: this.globalConfig.firstScreenHeight + 'px',
     boxEle: null,
     left: 0,
     top: 0,
@@ -31,10 +32,16 @@ export class Screen extends Base {
       ...this.config,
       ...option,
     }
-    this.el.className = 'drag_layout_screen'
+    this.initRender()
     this.config.boxEle.appendChild(this.el)
     this.updateStyle()
     this.initEvent()
+  }
+  
+  initRender () {
+    this.el.className = 'drag_layout_screen'
+    this.maskEl.className = 'drag_layout_screen_mask'
+    this.el.appendChild(this.maskEl)
   }
 
   updateStyle () {
@@ -53,6 +60,7 @@ export class Screen extends Base {
     const target = this.dragLayout.spirits.find(ele => ele.el === spiritDom)
     this.panel.wheelDeltaY = 0
     if (target) {
+      this.dragLayout.activeSpirit = target
       target.handleMousedown(e)
     }
   }
@@ -98,6 +106,15 @@ export class Screen extends Base {
       }
       this.dragLayout.updateAllStyle()
       this.dragLayout.calculateSort()
+    }
+  }
+
+  setEditMode (mode: EditMode) {
+    this.el.setAttribute('data-fixed-view-mode', mode)
+    if (mode === 'fixed') {
+      this.maskEl.setAttribute('style', `
+        height: ${this.screenHeight - this.globalConfig.firstScreenHeight}px;
+      `)
     }
   }
 }

@@ -1,5 +1,6 @@
 export type DomMode = 'flex' | 'absolute';
 export type SpiritType = 'absolute' | 'relative' | 'fixed' | 'container' | 'flex';
+export type EditMode = 'default' | 'fixed'
 export interface IDomConfig {
   width: string;
   height: string;
@@ -29,9 +30,13 @@ export interface IScreenConfig {
   top: number;
 }
 
-export interface IConfig {
+export interface IParams {
   threshold: number;
   adsorptionThreshold: number;
   adsorption: boolean;
-  fixedViewMode: boolean;
+  firstScreenHeight: number;
+}
+
+export interface IConfig extends IParams {
+  editMode: EditMode;
 }

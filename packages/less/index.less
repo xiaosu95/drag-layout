@@ -1,10 +1,23 @@
 .drag_layout_screen {
   position: relative;
-  width: 375px;
   // margin: 0 auto;
   box-shadow: rgba(0, 0, 0, 0.2) 2px 0px 10px;
   border: 5px solid #fff;
   box-sizing: content-box;
+  .drag_layout_screen_mask {
+    display: none;
+  }
+  &[data-fixed-view-mode="fixed"] {
+    .drag_layout_screen_mask {
+      display: block;
+      position: absolute;
+      width: 100%;
+      z-index: 300;
+      left: 0;
+      bottom: 0;
+      background: rgba(255,255,255,.9);
+    }
+  }
 }
 .drag_spirit, .container_spirit, .flex_spirit, .drag_layout_coordinates_x, .drag_layout_coordinates_y, .drag_layout_mark_line_x, .drag_layout_mark_line_y, .absolute_spirit, .drag_layout_mark_line_adsorption_y, .drag_layout_mark_line_adsorption_x {
   position: absolute;
@@ -18,7 +31,7 @@
   .drag_layout_top_bar, .drag_layout_left_bar {
     position: absolute;
     background: #fff;
-    z-index: 1000;
+    z-index: 200;
     left: 0;
     top: 0;
   }
@@ -40,21 +53,22 @@
   }
   &[data-active="true"] {
     opacity: 0.5;
+    z-index: 100;
   }
   &[data-parent-type="container"] {
-    z-index: 80;
+    z-index: 20;
     .drag_layout_resizable {
       display: none;
     }
   }
   &[data-parent-type="flex"] {
-    z-index: 80;
+    z-index: 20;
   }
 }
 .container_spirit, .flex_spirit {
   transition: transform 0.5s;
   &[data-active="true"] {
-    z-index: 1000;
+    z-index: 100;
     .drag_layout_auxiliary_drag {
       display: none;
     }
@@ -123,7 +137,9 @@
 }
 .drag_layout_mark_line_adsorption_y, .drag_layout_mark_line_adsorption_x {
   display: none;
-  z-index: 1000;
+}
+.drag_layout_mark_line_x, .drag_layout_mark_line_y, .drag_layout_mark_line_adsorption_y, .drag_layout_mark_line_adsorption_x {
+  z-index: 300;
 }
 .drag_layout_mark_line_y, .drag_layout_mark_line_adsorption_y {
   height: 100%;
@@ -138,7 +154,7 @@
 
 .drag_layout_coordinates {
   .drag_layout_coordinates_x, .drag_layout_coordinates_y {
-    z-index: 2000;
+    z-index: 210;
   }
   p {
     color: #5E5E5E;

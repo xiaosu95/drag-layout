@@ -1,4 +1,4 @@
-import { IConfig, ISpiritParams } from "./types/config";
+import { EditMode, IConfig, IParams, ISpiritParams } from "./types/config";
 import { Screen } from './common/screen';
 import { BaseSpirit } from "./common/base-spirit";
 import { AbsoluteSpirit } from './spirit/absolute-spirit'
@@ -16,12 +16,20 @@ export class DragLayout {
   spirits: Spirit[] = []
   coordinates: Coordinates
   markLine: MarkLine
-  constructor (boxEle: HTMLDivElement, public config: Partial<IConfig> = {
+  config: IConfig = {
     threshold: 40,
     adsorptionThreshold: 10,
     adsorption: true,
-    fixedViewMode: false
+    editMode: 'default',
+    firstScreenHeight: 1000
+  }
+  private _activeSpirit: Spirit
+  constructor (boxEle: HTMLDivElement, config: Partial<IParams> = {
   }) {
+    this.config = {
+      ...this.config,
+      ...config
+    }
     this.panel = new Panel(boxEle, this)
     this.scrren = new Screen({
       boxEle: this.panel.el
@@ -30,12 +38,20 @@ export class DragLayout {
     this.markLine = new MarkLine(this)
   }
 
-  get relativeSpirits () {
-    return this.spirits.filter(ele => ele.config.position === 'relative' && !ele.parentSpirit).sort((a, b) => a.sort - b.sort)
+  get activeSpirit () {
+    return this._activeSpirit
   }
 
-  get activeSpirit () {
-    return this.spirits.find(ele => ele.active)
+  set activeSpirit (spirit: Spirit) {
+    if (this._activeSpirit && this._activeSpirit !== spirit) {
+      this._activeSpirit.active = false
+    }
+    spirit.active = true
+    this._activeSpirit = spirit
+  }
+
+  get relativeSpirits () {
+    return this.spirits.filter(ele => ele.config.position === 'relative' && !ele.parentSpirit).sort((a, b) => a.sort - b.sort)
   }
 
   get containerSpirits (): ContainerSpirit[] {
@@ -111,5 +127,15 @@ export class DragLayout {
 
   getSpirit (uid: number) {
     return this.spirits.find(ele => ele.uid === uid)
+  }
+
+  setEditMode (mode: EditMode) {
+    this.config.editMode = mode
+    this.scrren.setEditMode(mode)
+  }
+
+  setAdsorption (bool: boolean) {
+    console.log(bool)
+    this.config.adsorption = bool
   }
 }
