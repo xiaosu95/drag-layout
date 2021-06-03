@@ -35,6 +35,7 @@ export class Panel extends Base {
     this.el.onmousedown = (event: MouseEvent) => {
       const disX = event.clientX - this.screen.config.left
       const disY = event.clientY - this.screen.config.top
+      this.dragLayout.activeSpirit = undefined
       document.onmousemove = (ev: MouseEvent) => {
         const clientX = ev.clientX
         const clientY = ev.clientY

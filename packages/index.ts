@@ -21,7 +21,8 @@ export class DragLayout {
     adsorptionThreshold: 10,
     adsorption: true,
     editMode: 'default',
-    firstScreenHeight: 700
+    firstScreenHeight: 700,
+    handleDrop: () => {}
   }
   private _activeSpirit: Spirit
   constructor (boxEle: HTMLDivElement, config: Partial<IParams> = {
@@ -46,7 +47,7 @@ export class DragLayout {
     if (this._activeSpirit && this._activeSpirit !== spirit) {
       this._activeSpirit.active = false
     }
-    spirit.active = true
+    spirit && (spirit.active = true)
     this._activeSpirit = spirit
   }
 

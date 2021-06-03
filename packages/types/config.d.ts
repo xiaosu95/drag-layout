@@ -35,6 +35,7 @@ export interface IParams {
   adsorptionThreshold: number;
   adsorption: boolean;
   firstScreenHeight: number;
+  handleDrop: (event: DragEvent) => void;
 }
 
 export interface IConfig extends IParams {

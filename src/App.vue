@@ -8,21 +8,30 @@
       </el-header>
       <el-container class="el-container_b">
         <el-aside style="width:280px;" class="tool_bar">
-          <el-switch
-            v-model="editMode"
-            active-value="fixed"
-            inactive-value="default"
-            active-text="首屏模式"
-            @change="changeEditMode"
-            inactive-text="全部内容"
-          >
-          </el-switch>
-          <el-switch
-            v-model="adsorption"
-            active-text="吸附模式"
-            @change="changeAdsorption"
-          >
-          </el-switch>
+          <div>
+            <el-switch
+              v-model="editMode"
+              active-value="fixed"
+              inactive-value="default"
+              active-text="首屏模式"
+              @change="changeEditMode"
+              inactive-text="全部内容"
+            >
+            </el-switch>
+          </div>
+          <div>
+            <el-switch
+              v-model="adsorption"
+              active-text="吸附模式"
+              @change="changeAdsorption"
+            >
+            </el-switch>
+          </div>
+          <div class="components">
+            <div draggable="true">
+              我是一个组件
+            </div>
+          </div>
         </el-aside>
         <el-main>
           <el-card class="box-card">
@@ -43,56 +52,60 @@ export default class App extends Vue {
   adsorption = true;
   dragLayout: DragLayout;
   mounted() {
-    this.dragLayout = new DragLayout(this.$refs.boxEle as HTMLDivElement);
-    this.dragLayout.addSpirit({
-      height: "100px"
+    this.dragLayout = new DragLayout(this.$refs.boxEle as HTMLDivElement, {
+      handleDrop(event: DragEvent) {
+        console.log(324234, event);
+      }
     });
-    this.dragLayout.addSpirit({
-      height: "200px"
-    });
-    this.dragLayout.addSpirit({
-      height: "100px",
-      type: "flex"
-    });
-    this.dragLayout.addSpirit({
-      height: "100px"
-    });
-    this.dragLayout.addSpirit({
-      height: "150px",
-      type: "container"
-    });
-    this.dragLayout.addSpirit({
-      height: "100px"
-    });
-    this.dragLayout.addSpirit({
-      height: "100px"
-    });
-    this.dragLayout.addSpirit({
-      height: "100px"
-    });
-    this.dragLayout.addSpirit({
-      height: "100px"
-    });
-    this.dragLayout.addSpirit({
-      height: "100px"
-    });
-    this.dragLayout.addSpirit({
-      height: "100px"
-    });
-    this.dragLayout.addSpirit({
-      height: "100px"
-    });
+    // this.dragLayout.addSpirit({
+    //   height: "100px"
+    // });
+    // this.dragLayout.addSpirit({
+    //   height: "200px"
+    // });
+    // this.dragLayout.addSpirit({
+    //   height: "100px",
+    //   type: "flex"
+    // });
+    // this.dragLayout.addSpirit({
+    //   height: "100px"
+    // });
+    // this.dragLayout.addSpirit({
+    //   height: "150px",
+    //   type: "container"
+    // });
+    // this.dragLayout.addSpirit({
+    //   height: "100px"
+    // });
+    // this.dragLayout.addSpirit({
+    //   height: "100px"
+    // });
+    // this.dragLayout.addSpirit({
+    //   height: "100px"
+    // });
+    // this.dragLayout.addSpirit({
+    //   height: "100px"
+    // });
+    // this.dragLayout.addSpirit({
+    //   height: "100px"
+    // });
+    // this.dragLayout.addSpirit({
+    //   height: "100px"
+    // });
+    // this.dragLayout.addSpirit({
+    //   height: "100px"
+    // });
 
-    this.dragLayout.addSpirit({
-      height: "100px",
-      width: "100px",
-      type: "absolute"
-    });
-    this.dragLayout.addSpirit({
-      height: "100px",
-      width: "100px",
-      type: "fixed"
-    });
+    // this.dragLayout.addSpirit({
+    //   height: "100px",
+    //   width: "100px",
+    //   type: "absolute"
+    // });
+    // this.dragLayout.addSpirit({
+    //   height: "100px",
+    //   width: "100px",
+    //   type: "fixed"
+    // });
   }
 
   changeEditMode(val: any) {
@@ -123,6 +136,14 @@ li {
 }
 .screen_box {
   height: 100%;
+}
+.components {
+  div {
+    width: 100px;
+    height: 100px;
+    border: 1px #ddd solid;
+    font-size: 12px;
+  }
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

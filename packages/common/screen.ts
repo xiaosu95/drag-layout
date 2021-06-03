@@ -51,6 +51,14 @@ export class Screen extends Base {
 
   initEvent () {
     this.el.onmousedown = this.handleMousedown.bind(this)
+    // this.el.ondragover = (event: DragEvent) => {
+    //   event.preventDefault()
+    //   console.log(65)
+    // }
+    // this.el.ondrag = (event: DragEvent) => {
+    //   console.log(342)
+    //   this.globalConfig.handleDrop(event)
+    // }
   }
 
   handleMousedown (e: MouseEvent) {
