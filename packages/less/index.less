@@ -53,12 +53,14 @@
 .drag_spirit {
   transition: transform 0.5s;
   box-sizing: border-box;
+  cursor: all-scroll;
   &:hover {
     outline: #f55 2px solid;
     z-index: 10;
   }
   &[data-active="true"] {
     opacity: 0.5;
+    outline: #f55 2px solid;
     z-index: 100;
   }
   &[data-parent-type="container"] {
@@ -98,14 +100,20 @@
 }
 .absolute_spirit {
   z-index: 100;
+  cursor: all-scroll;
 }
 .copy_spirit {
   z-index: 1000;
 }
 
 .drag_layout_resizable {
+  display: none;
+  &.show {
+    display: block;
+  }
   span {
     position: absolute;
+    z-index: 300;
     width: 20px;
     height: 20px;
     margin-left: -10px;

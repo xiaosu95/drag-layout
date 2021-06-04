@@ -16,6 +16,8 @@ export class BaseSpirit extends Base {
     left: 0,
     top: 0,
     position: 'relative',
+    render: undefined,
+    disableResizable: false
   }
   background = ''
   private _active = false
@@ -73,12 +75,22 @@ export class BaseSpirit extends Base {
       ...this.config,
       ...option,
     }
-    this.el.innerHTML = this.uid + ''
+    // this.el.innerHTML = this.uid + ''
     this.initResizableEl()
     this.updateStyle()
     this.el.className = 'drag_spirit'
     this.el.setAttribute('data-uid', String(this.uid))
-    this.background = `RGBA(${Math.floor(255 * Math.random())}, ${Math.floor(255 * Math.random())}, ${Math.floor(255 * Math.random())})`
+    // this.background = `RGBA(${Math.floor(255 * Math.random())}, ${Math.floor(255 * Math.random())}, ${Math.floor(255 * Math.random())})`
+    this.initRender()
+  }
+
+  initRender () {
+    if (typeof this.config.render === 'function') {
+      this.el.appendChild(this.config.render())
+    } else if (this.config.render instanceof HTMLElement
+      ) {
+      this.el.appendChild(this.config.render)
+    }
   }
 
   initResizableEl () {
@@ -89,6 +101,7 @@ export class BaseSpirit extends Base {
       <span class="drag_layout_resizable_se" data-resizable="se"></span>
     `
     this.el.appendChild(this.resizableEl)
+    this.setDisableResizable(this.config.disableResizable)
   }
 
   updateStyle () {
@@ -173,6 +186,14 @@ export class BaseSpirit extends Base {
     // this.followParentStyle()
     spirit.childrens.push(this)
     this.dragLayout.updateAllStyle()
+  }
+
+  setDisableResizable (bool: boolean) {
+    if (bool) {
+      this.resizableEl.classList.remove('show')
+    } else {
+      this.resizableEl.classList.add('show')
+    }
   }
 
   destroy () {

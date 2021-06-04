@@ -28,8 +28,33 @@
             </el-switch>
           </div>
           <div class="components">
-            <div draggable="true">
+            <div
+              draggable="true"
+              data-component-type="banner"
+              @dragstart="handleDragstart"
+            >
               我是一个组件
+            </div>
+            <div
+              draggable="true"
+              data-component-type="calendar"
+              @dragstart="handleDragstart"
+            >
+              我是一个日历组件
+            </div>
+            <div
+              draggable="true"
+              data-component-type="table"
+              @dragstart="handleDragstart"
+            >
+              我是一个表格组件
+            </div>
+            <div
+              draggable="true"
+              data-component-type="backtop"
+              @dragstart="handleDragstart"
+            >
+              我是一个backtop组件
             </div>
           </div>
         </el-aside>
@@ -46,6 +71,10 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { DragLayout } from "@/index";
+import Banner from "./components/test/banner/index.vue";
+import Calendar from "./components/test/calendar/index.vue";
+import TestTable from "./components/test/table/index.vue";
+import Backtop from "./components/test/backtop/index.vue";
 @Component
 export default class App extends Vue {
   editMode = "default";
@@ -53,8 +82,58 @@ export default class App extends Vue {
   dragLayout: DragLayout;
   mounted() {
     this.dragLayout = new DragLayout(this.$refs.boxEle as HTMLDivElement, {
-      handleDrop(event: DragEvent) {
+      handleDrop: (event: DragEvent) => {
         console.log(324234, event);
+        const type = event.dataTransfer.getData("type");
+        switch (type) {
+          case "banner": {
+            const $banner = new Banner({
+              el: document.createElement("div")
+            });
+            this.dragLayout.addSpirit({
+              height: "300px",
+              render: $banner.$el
+            });
+            break;
+          }
+          case "calendar": {
+            const $calendar = new Calendar({
+              el: document.createElement("div")
+            });
+            this.dragLayout.addSpirit({
+              height: "400px",
+              render: $calendar.$el
+            });
+            break;
+          }
+          case "table": {
+            const $testTable = new TestTable({
+              el: document.createElement("div")
+            });
+            this.dragLayout.addSpirit({
+              height: "300px",
+              render: $testTable.$el
+            });
+            break;
+          }
+          case "backtop": {
+            const $backtop = new Backtop({
+              el: document.createElement("div")
+            });
+            this.dragLayout.addSpirit({
+              disableResizable: true,
+              type: "fixed",
+              height: "50px",
+              width: "50px",
+              render: $backtop.$el,
+              left: event.offsetX,
+              top: event.offsetY
+            });
+            break;
+          }
+          default:
+            break;
+        }
       }
     });
     // this.dragLayout.addSpirit({
@@ -106,6 +185,13 @@ export default class App extends Vue {
     //   width: "100px",
     //   type: "fixed"
     // });
+  }
+
+  handleDragstart(event: DragEvent) {
+    event.dataTransfer.setData(
+      "type",
+      (event.target as any).getAttribute("data-component-type")
+    );
   }
 
   changeEditMode(val: any) {

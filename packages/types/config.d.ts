@@ -14,18 +14,19 @@ export interface ISpiritParams {
   height: string;
   mode: DomMode;
   type?: SpiritType;
+  render: Element | (() => any);
+  disableResizable?: boolean;
+  left: number;
+  top: number;
 }
 
 export interface ISpiritConfig extends ISpiritParams {
-  left: number;
-  top: number;
   position: 'absolute' | 'relative' | 'fixed';
 }
 
 export interface IScreenConfig {
   boxEle: HTMLDivElement;
   width: string;
-  height: string;
   left: number;
   top: number;
 }

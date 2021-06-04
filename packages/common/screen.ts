@@ -9,7 +9,6 @@ export class Screen extends Base {
   maskEl = document.createElement('span')
   config: IScreenConfig = {
     width: '375px',
-    height: this.globalConfig.firstScreenHeight + 'px',
     boxEle: null,
     left: 0,
     top: 0,
@@ -18,10 +17,10 @@ export class Screen extends Base {
   wheelDeltaY = 0 // 滚动y值
 
   get style () {
-    const { width, height, left, top } = this.config
+    const { width, left, top } = this.config
     return `
       width: ${width};
-      height: ${this.screenHeight ? `${this.screenHeight}px` : height};
+      height: ${Math.max(this.globalConfig.firstScreenHeight, this.screenHeight)}px;
       transform: translate(${left}px, ${top}px);
     `
   }
@@ -33,15 +32,15 @@ export class Screen extends Base {
       ...option,
     }
     this.initRender()
-    this.config.boxEle.appendChild(this.el)
     this.updateStyle()
     this.initEvent()
   }
   
   initRender () {
-    this.el.className = 'drag_layout_screen'
-    this.maskEl.className = 'drag_layout_screen_mask'
+    this.el.classList.add('drag_layout_screen')
+    this.maskEl.classList.add('drag_layout_screen_mask')
     this.el.appendChild(this.maskEl)
+    this.config.boxEle.appendChild(this.el)
   }
 
   updateStyle () {
@@ -51,14 +50,12 @@ export class Screen extends Base {
 
   initEvent () {
     this.el.onmousedown = this.handleMousedown.bind(this)
-    // this.el.ondragover = (event: DragEvent) => {
-    //   event.preventDefault()
-    //   console.log(65)
-    // }
-    // this.el.ondrag = (event: DragEvent) => {
-    //   console.log(342)
-    //   this.globalConfig.handleDrop(event)
-    // }
+    this.el.ondragover = (event: DragEvent) => {
+      event.preventDefault()
+    }
+    this.el.ondrop = (event: DragEvent) => {
+      this.globalConfig.handleDrop(event)
+    }
   }
 
   handleMousedown (e: MouseEvent) {

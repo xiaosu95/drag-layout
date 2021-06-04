@@ -1,4 +1,4 @@
-import { EditMode, IConfig, IParams, ISpiritParams } from "./types/config";
+import { EditMode, IConfig, IParams, ISpiritParams, SpiritType } from "./types/config";
 import { Screen } from './common/screen';
 import { BaseSpirit } from "./common/base-spirit";
 import { AbsoluteSpirit } from './spirit/absolute-spirit'
@@ -85,7 +85,7 @@ export class DragLayout {
     this.scrren.updateStyle()
   }
 
-  addSpirit (option: Partial<ISpiritParams>, prevSpirit?: BaseSpirit) {
+  addSpirit (option: Partial<ISpiritParams>) {
     let s: Spirit
     switch (option.type) {
       case 'absolute':
@@ -105,7 +105,12 @@ export class DragLayout {
         break;
     }
     if (s.config.position === 'relative') {
-      if (!prevSpirit) prevSpirit = this.spirits[this.spirits.length - 1]
+      let prevSpirit
+      if (option.top) {
+        
+      } else {
+        prevSpirit = this.relativeSpirits[this.relativeSpirits.length - 1]
+      }
       if (prevSpirit) {
         const position = this.getSpiritPosition(prevSpirit)
         s.config.top = position.top
@@ -126,12 +131,13 @@ export class DragLayout {
     })
   }
 
-  checkPosition () {
-
-  }
-
-  getSpirit (uid: number) {
-    return this.spirits.find(ele => ele.uid === uid)
+  getSpirit (uid: number | {x:number, y: number}, type?: SpiritType) {
+    const arr = type ? this.spirits.filter(ele => ele.type === type) : this.spirits
+    if (typeof uid === 'object') {
+      // return arr.find(ele => ele.config.left >= uid.x )
+    } else {
+      return arr.find(ele => ele.uid === uid)
+    }
   }
 
   setEditMode (mode: EditMode) {
