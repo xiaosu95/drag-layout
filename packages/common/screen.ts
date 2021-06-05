@@ -4,11 +4,11 @@ import { DragLayout } from "..";
 import { BaseSpirit } from "./base-spirit";
 import { getSpiritDom } from "@/utils/common";
 import { Base } from "./base";
+import { Spirit } from "@/types";
 
 export class Screen extends Base {
   maskEl = document.createElement('span')
   config: IScreenConfig = {
-    width: '375px',
     boxEle: null,
     left: 0,
     top: 0,
@@ -17,9 +17,9 @@ export class Screen extends Base {
   wheelDeltaY = 0 // 滚动y值
 
   get style () {
-    const { width, left, top } = this.config
+    const { left, top } = this.config
     return `
-      width: ${width};
+      width: ${this.globalConfig.screenWidth}px;
       height: ${Math.max(this.globalConfig.firstScreenHeight, this.screenHeight)}px;
       transform: translate(${left}px, ${top}px);
     `
@@ -54,7 +54,15 @@ export class Screen extends Base {
       event.preventDefault()
     }
     this.el.ondrop = (event: DragEvent) => {
-      this.globalConfig.handleDrop(event)
+      const spiritDom: HTMLDivElement = getSpiritDom((event as any).toElement)
+      let spirit: Spirit
+      if (spiritDom) {
+        spirit = this.dragLayout.getSpirit(Number(spiritDom.getAttribute('data-uid')))
+      }
+      this.globalConfig.handleDrop(event, {
+        x: spirit ? spirit.config.left + event.offsetX : event.offsetX,
+        y: spirit ? spirit.config.top + event.offsetY : event.offsetY,
+      })
     }
   }
 

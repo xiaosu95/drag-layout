@@ -26,7 +26,6 @@ export interface ISpiritConfig extends ISpiritParams {
 
 export interface IScreenConfig {
   boxEle: HTMLDivElement;
-  width: string;
   left: number;
   top: number;
 }
@@ -36,7 +35,11 @@ export interface IParams {
   adsorptionThreshold: number;
   adsorption: boolean;
   firstScreenHeight: number;
-  handleDrop: (event: DragEvent) => void;
+  handleDrop: (event: DragEvent, offset: {
+    x: number;
+    y: number;
+  }) => void;
+  screenWidth: number;
 }
 
 export interface IConfig extends IParams {

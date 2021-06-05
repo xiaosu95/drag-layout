@@ -82,8 +82,9 @@ export default class App extends Vue {
   dragLayout: DragLayout;
   mounted() {
     this.dragLayout = new DragLayout(this.$refs.boxEle as HTMLDivElement, {
-      handleDrop: (event: DragEvent) => {
-        console.log(324234, event);
+      screenWidth: 800,
+      handleDrop: (event, offset) => {
+        console.log(324234, event, offset);
         const type = event.dataTransfer.getData("type");
         switch (type) {
           case "banner": {
@@ -91,6 +92,8 @@ export default class App extends Vue {
               el: document.createElement("div")
             });
             this.dragLayout.addSpirit({
+              left: offset.x,
+              top: offset.y,
               height: "300px",
               render: $banner.$el
             });
@@ -101,6 +104,8 @@ export default class App extends Vue {
               el: document.createElement("div")
             });
             this.dragLayout.addSpirit({
+              left: offset.x,
+              top: offset.y,
               height: "400px",
               render: $calendar.$el
             });
@@ -111,6 +116,8 @@ export default class App extends Vue {
               el: document.createElement("div")
             });
             this.dragLayout.addSpirit({
+              left: offset.x,
+              top: offset.y,
               height: "300px",
               render: $testTable.$el
             });

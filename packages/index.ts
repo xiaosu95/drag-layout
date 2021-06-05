@@ -22,6 +22,7 @@ export class DragLayout {
     adsorption: true,
     editMode: 'default',
     firstScreenHeight: 700,
+    screenWidth: 375,
     handleDrop: () => {}
   }
   private _activeSpirit: Spirit
@@ -37,6 +38,7 @@ export class DragLayout {
     }, this)
     this.coordinates = new Coordinates(this)
     this.markLine = new MarkLine(this)
+    this.updateAllStyle()
   }
 
   get activeSpirit () {
@@ -105,22 +107,19 @@ export class DragLayout {
         break;
     }
     if (s.config.position === 'relative') {
-      let prevSpirit
+      let prevSpirit: Spirit
       if (option.top) {
-        
+        prevSpirit = this.getSpirit({ x: option.left, y: option.top }, this.relativeSpirits)
       } else {
         prevSpirit = this.relativeSpirits[this.relativeSpirits.length - 1]
       }
-      if (prevSpirit) {
-        const position = this.getSpiritPosition(prevSpirit)
-        s.config.top = position.top
-      }
+      s.config.top = prevSpirit ? prevSpirit.bottomPosition : 0
+      s.config.left = 0
     }
-    s.updateStyle()
     this.spirits.push(s)
     this.scrren.el.appendChild(s.el)
     this.calculateSort()
-    this.scrren.updateStyle()
+    this.updateAllStyle()
   }
 
   calculateSort () {
@@ -131,10 +130,14 @@ export class DragLayout {
     })
   }
 
-  getSpirit (uid: number | {x:number, y: number}, type?: SpiritType) {
-    const arr = type ? this.spirits.filter(ele => ele.type === type) : this.spirits
+  getSpirit (uid: number | {x:number, y: number}, arr: Spirit[] = this.spirits) {
     if (typeof uid === 'object') {
-      // return arr.find(ele => ele.config.left >= uid.x )
+      if (Array.isArray(arr)) {
+        return arr.find(ele => {
+          const { config: { left, top }, rightPosition, bottomPosition } = ele
+          return left <= uid.x && uid.x <= rightPosition && uid.y >= top && uid.y <= bottomPosition
+        })
+      }
     } else {
       return arr.find(ele => ele.uid === uid)
     }

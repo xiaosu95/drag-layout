@@ -155,7 +155,7 @@ export class BaseSpirit extends Base {
       this.screen.copySpirit.config.left = l
       this.screen.copySpirit.updateStyle()
       this.screen.checkNewSort(this)
-    }, 20)
+    }, 10)
     const clear = () => {
       this.screen.removeCopySpirit()
       document.removeEventListener('mousemove', onmousemove)
