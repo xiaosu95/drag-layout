@@ -28,7 +28,7 @@ export interface ISpiritParams {
 }
 
 export interface ISpiritConfig extends ISpiritParams {
-  position: 'absolute' | 'relative' | 'fixed';
+  position: "absolute" | "relative" | "fixed";
 }
 
 export interface IScreenConfig {
@@ -42,10 +42,13 @@ export interface IParams {
   adsorptionThreshold: number;
   adsorption: boolean;
   firstScreenHeight: number;
-  handleDrop: (event: DragEvent, offset: {
-    x: number;
-    y: number;
-  }) => void;
+  handleDrop: (
+    event: DragEvent,
+    offset: {
+      x: number;
+      y: number;
+    }
+  ) => void;
   screenWidth: number;
 }
 

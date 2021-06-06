@@ -8,7 +8,7 @@ export enum SpiritType {
   ABSOLUTE,
   FIXED,
   BLOCK_CONTAINER,
-  INLINE_CONTAINER,
+  INLINE_CONTAINER
 }
 
 /**
@@ -17,6 +17,6 @@ export enum SpiritType {
  * @enum {number}
  */
 export enum EditMode {
-  DEFAULT = 'default',
-  FIXED = 'fixed'
+  DEFAULT = "default",
+  FIXED = "fixed"
 }
