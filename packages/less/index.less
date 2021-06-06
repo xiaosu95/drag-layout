@@ -25,7 +25,7 @@
     }
   }
 }
-.drag_spirit, .container_spirit, .flex_spirit, .drag_layout_coordinates_x, .drag_layout_coordinates_y, .drag_layout_mark_line_x, .drag_layout_mark_line_y, .absolute_spirit, .drag_layout_mark_line_adsorption_y, .drag_layout_mark_line_adsorption_x {
+.drag_spirit, .drag_layout_coordinates_x, .drag_layout_coordinates_y, .drag_layout_mark_line_x, .drag_layout_mark_line_y, .drag_layout_mark_line_adsorption_y, .drag_layout_mark_line_adsorption_x {
   position: absolute;
   left: 0;
   top: 0;
@@ -53,6 +53,21 @@
 .drag_spirit {
   transition: transform 0.5s;
   box-sizing: border-box;
+  overflow: hidden;
+  &[data-active="true"] {
+    z-index: 100;
+  }
+  &[data-parent-type="block_container"] {
+    z-index: 20;
+    .drag_layout_resizable {
+      display: none;
+    }
+  }
+  &[data-parent-type="inline_container"] {
+    z-index: 20;
+  }
+}
+.drag_default_spirit {
   cursor: all-scroll;
   &:hover {
     outline: #f55 2px solid;
@@ -61,22 +76,10 @@
   &[data-active="true"] {
     opacity: 0.5;
     outline: #f55 2px solid;
-    z-index: 100;
-  }
-  &[data-parent-type="container"] {
-    z-index: 20;
-    .drag_layout_resizable {
-      display: none;
-    }
-  }
-  &[data-parent-type="flex"] {
-    z-index: 20;
   }
 }
 .container_spirit, .flex_spirit {
-  transition: transform 0.5s;
   &[data-active="true"] {
-    z-index: 100;
     .drag_layout_auxiliary_drag {
       display: none;
     }
@@ -99,6 +102,7 @@
   }
 }
 .absolute_spirit {
+  transition: none;
   z-index: 100;
   cursor: all-scroll;
 }

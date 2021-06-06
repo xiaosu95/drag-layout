@@ -1,14 +1,23 @@
 import { BaseSpirit } from "@/common/base-spirit";
-import { ISpiritParams, SpiritType } from "@/types/config";
+import { SpiritType } from "@/enums";
+import { IOuputConfig, ISpiritParams } from "@/types/config";
 import { DragLayout } from "..";
 
 export class ContainerSpirit extends BaseSpirit {
-  type: SpiritType = 'container'
-  childrens: BaseSpirit[] = []
+  type: SpiritType = SpiritType.BLOCK_CONTAINER
+  children: BaseSpirit[] = []
   auxiliaryDragEl = document.createElement('div')
+
+  get ouputConfig (): IOuputConfig {
+    return {
+      ...super.ouputConfig,
+      children: this.children.map(ele => ele.ouputConfig)
+    }
+  }
+
   constructor (option: Partial<ISpiritParams> = {}, dragLayout: DragLayout) {
     super(option, dragLayout)
-    this.el.className = 'container_spirit'
+    this.el.classList.add('container_spirit')
     this.background = 'linear-gradient(45deg, black, transparent)'
     this.initAuxiliaryDrag()
   }
@@ -27,18 +36,18 @@ export class ContainerSpirit extends BaseSpirit {
 
   updateStyle () {
     super.updateStyle()
-    this.childrens && this.childrens.sort((a, b) => a.subSort - b.subSort)
-    this.syncChildrensStyle()
+    this.children && this.children.sort((a, b) => a.subSort - b.subSort)
+    this.syncChildrenStyle()
   }
 
-  syncChildrensStyle () {
-    if (this.childrens) {
-      this.childrens.forEach((ele, idx) => {
+  syncChildrenStyle () {
+    if (this.children) {
+      this.children.forEach((ele, idx) => {
         const { config: { left, top, height } } = this
-        const prev = this.childrens[idx - 1]
+        const prev = this.children[idx - 1]
         ele.config.left = prev ? prev.rightPosition : left
         ele.config.top = top
-        ele.config.width = `${100 / this.childrens.length}%`
+        ele.config.width = `${100 / this.children.length}%`
         ele.config.height = height
         ele.updateStyle()
       })
@@ -46,8 +55,8 @@ export class ContainerSpirit extends BaseSpirit {
   }
 
   calculateChildSort () {
-    this.childrens.sort((a, b) => a.config.left - b.config.left)
-    this.childrens.forEach((ele, idx) => {
+    this.children.sort((a, b) => a.config.left - b.config.left)
+    this.children.forEach((ele, idx) => {
       ele.subSort = idx
     })
   }
@@ -72,14 +81,14 @@ export class ContainerSpirit extends BaseSpirit {
 
   checkNewSort () {
     const { scrren: { copySpirit }, activeSpirit } = this.dragLayout
-    const s = this.childrens.find(ele => {
+    const s = this.children.find(ele => {
       const offset = Math.abs(ele.config.left - copySpirit.config.left)
       return ele !== activeSpirit && offset < this.globalConfig.threshold && copySpirit.config.top > ele.config.top && copySpirit.config.top < ele.bottomPosition
     })
     if (s) {
       activeSpirit.subSort = s.subSort - .5
     } else {
-      const lastSpirit = this.childrens[this.childrens.length - 1]
+      const lastSpirit = this.children[this.children.length - 1]
       if (lastSpirit !== activeSpirit && Math.abs(lastSpirit.rightPosition - copySpirit.config.left) < this.globalConfig.threshold) {
         activeSpirit.subSort = lastSpirit.subSort + .5
       }

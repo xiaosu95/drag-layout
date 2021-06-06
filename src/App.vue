@@ -75,6 +75,7 @@ import Banner from "./components/test/banner/index.vue";
 import Calendar from "./components/test/calendar/index.vue";
 import TestTable from "./components/test/table/index.vue";
 import Backtop from "./components/test/backtop/index.vue";
+import { SpiritType } from "@/enums";
 @Component
 export default class App extends Vue {
   editMode = "default";
@@ -95,7 +96,10 @@ export default class App extends Vue {
               left: offset.x,
               top: offset.y,
               height: "300px",
-              render: $banner.$el
+              render: $banner.$el,
+              handleResize(ouput) {
+                console.log(2342423, ouput);
+              }
             });
             break;
           }
@@ -128,8 +132,8 @@ export default class App extends Vue {
               el: document.createElement("div")
             });
             this.dragLayout.addSpirit({
-              disableResizable: true,
-              type: "fixed",
+              resizable: false,
+              type: SpiritType.FIXED,
               height: "50px",
               width: "50px",
               render: $backtop.$el,
@@ -149,26 +153,29 @@ export default class App extends Vue {
     // this.dragLayout.addSpirit({
     //   height: "200px"
     // });
-    // this.dragLayout.addSpirit({
-    //   height: "100px",
-    //   type: "flex"
-    // });
-    // this.dragLayout.addSpirit({
-    //   height: "100px"
-    // });
-    // this.dragLayout.addSpirit({
-    //   height: "150px",
-    //   type: "container"
-    // });
+    this.dragLayout.addSpirit({
+      height: "100px",
+      type: SpiritType.INLINE_CONTAINER
+    });
     // this.dragLayout.addSpirit({
     //   height: "100px"
     // });
-    // this.dragLayout.addSpirit({
-    //   height: "100px"
-    // });
-    // this.dragLayout.addSpirit({
-    //   height: "100px"
-    // });
+    this.dragLayout.addSpirit({
+      height: "150px",
+      type: SpiritType.BLOCK_CONTAINER,
+      handleResize(ouput) {
+        console.log(2342423, ouput);
+      }
+    });
+    this.dragLayout.addSpirit({
+      height: "100px"
+    });
+    this.dragLayout.addSpirit({
+      height: "100px"
+    });
+    this.dragLayout.addSpirit({
+      height: "100px"
+    });
     // this.dragLayout.addSpirit({
     //   height: "100px"
     // });

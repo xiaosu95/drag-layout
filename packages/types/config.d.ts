@@ -1,10 +1,17 @@
-export type DomMode = 'flex' | 'absolute';
-export type SpiritType = 'absolute' | 'relative' | 'fixed' | 'container' | 'flex';
-export type EditMode = 'default' | 'fixed'
+import { EditMode, SpiritType } from "@/enums";
+
+export interface IOuputConfig {
+  width: number;
+  height: number;
+  x: number;
+  y: number;
+  type: SpiritType;
+  resizable: boolean;
+  children?: IOuputConfig[];
+}
 export interface IDomConfig {
   width: string;
   height: string;
-  mode: DomMode;
   left: string | number;
   top: string | number;
 }
@@ -12,12 +19,12 @@ export interface IDomConfig {
 export interface ISpiritParams {
   width: string;
   height: string;
-  mode: DomMode;
   type?: SpiritType;
   render: Element | (() => any);
-  disableResizable?: boolean;
+  resizable?: boolean;
   left: number;
   top: number;
+  handleResize: (ouput: IOuputConfig) => void;
 }
 
 export interface ISpiritConfig extends ISpiritParams {

@@ -1,10 +1,11 @@
-import { EditMode, IScreenConfig } from "@/types/config";
+import { IScreenConfig } from "@/types/config";
 import { CopySpirit } from "@/spirit/copy-spirit";
 import { DragLayout } from "..";
 import { BaseSpirit } from "./base-spirit";
 import { getSpiritDom } from "@/utils/common";
 import { Base } from "./base";
 import { Spirit } from "@/types";
+import { EditMode, SpiritType } from "@/enums";
 
 export class Screen extends Base {
   maskEl = document.createElement('span')
@@ -93,7 +94,7 @@ export class Screen extends Base {
   checkNewSort (target: BaseSpirit) {
     if (this.copySpirit) {
       // 处理容器
-      if (this.activeSpirit.type === 'relative') {
+      if (this.activeSpirit.type === SpiritType.DEFAULT) {
         for (let index = 0; index < this.dragLayout.containerSpirits.length; index++) {
           const c = this.dragLayout.containerSpirits[index]
           if (c.checkCanInsert()) {
@@ -107,7 +108,7 @@ export class Screen extends Base {
         return ele !== target && offset > 0 && offset < this.globalConfig.threshold
       })
       if (s) {
-        if (s.type === 'relative' || s.type === 'container' || s.type === 'flex') {
+        if (s.type === SpiritType.DEFAULT || s.type === SpiritType.BLOCK_CONTAINER || s.type === SpiritType.INLINE_CONTAINER) {
           target.removeParentSpirit()
           target.sort = s.sort - .5
         }
@@ -124,7 +125,7 @@ export class Screen extends Base {
 
   setEditMode (mode: EditMode) {
     this.el.setAttribute('data-fixed-view-mode', mode)
-    if (mode === 'fixed') {
+    if (mode === EditMode.FIXED) {
       this.maskEl.setAttribute('style', `
         height: ${this.screenHeight - this.globalConfig.firstScreenHeight}px;
       `)

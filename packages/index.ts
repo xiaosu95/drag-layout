@@ -1,4 +1,4 @@
-import { EditMode, IConfig, IParams, ISpiritParams, SpiritType } from "./types/config";
+import { IConfig, IParams, ISpiritParams } from "./types/config";
 import { Screen } from './common/screen';
 import { BaseSpirit } from "./common/base-spirit";
 import { AbsoluteSpirit } from './spirit/absolute-spirit'
@@ -10,6 +10,7 @@ import { Spirit } from "./types";
 import { FlexSpirit } from "./spirit/flex-spirit";
 import { Coordinates } from "./utils/coordinates";
 import { MarkLine } from "./utils/markline";
+import { EditMode, SpiritType } from "./enums";
 export class DragLayout {
   scrren: Screen
   panel: Panel
@@ -20,7 +21,7 @@ export class DragLayout {
     threshold: 40,
     adsorptionThreshold: 10,
     adsorption: true,
-    editMode: 'default',
+    editMode: EditMode.DEFAULT,
     firstScreenHeight: 700,
     screenWidth: 375,
     handleDrop: () => {}
@@ -58,7 +59,7 @@ export class DragLayout {
   }
 
   get containerSpirits (): ContainerSpirit[] {
-    return this.spirits.filter(ele => ele.type === 'container' || ele.type === 'flex') as ContainerSpirit[]
+    return this.spirits.filter(ele => ele.type === SpiritType.BLOCK_CONTAINER || ele.type === SpiritType.INLINE_CONTAINER) as ContainerSpirit[]
   }
 
   get allSpiritCoordinates () {
@@ -87,19 +88,19 @@ export class DragLayout {
     this.scrren.updateStyle()
   }
 
-  addSpirit (option: Partial<ISpiritParams>) {
+  addSpirit (option: Partial<ISpiritParams>): Spirit {
     let s: Spirit
     switch (option.type) {
-      case 'absolute':
+      case SpiritType.ABSOLUTE:
         s = new AbsoluteSpirit(option, this)
         break;
-      case 'fixed':
+      case SpiritType.FIXED:
         s = new FixedSpirit(option, this)
         break;
-      case 'container':
+      case SpiritType.BLOCK_CONTAINER:
         s = new ContainerSpirit(option, this)
         break;
-      case 'flex':
+      case SpiritType.INLINE_CONTAINER:
         s = new FlexSpirit(option, this)
         break;
       default:
@@ -108,18 +109,14 @@ export class DragLayout {
     }
     if (s.config.position === 'relative') {
       let prevSpirit: Spirit
-      if (option.top) {
-        prevSpirit = this.getSpirit({ x: option.left, y: option.top }, this.relativeSpirits)
-      } else {
-        prevSpirit = this.relativeSpirits[this.relativeSpirits.length - 1]
-      }
+      prevSpirit = this.getSpirit({ x: option.left, y: option.top }, this.relativeSpirits) || this.relativeSpirits[this.relativeSpirits.length - 1]
       s.config.top = prevSpirit ? prevSpirit.bottomPosition : 0
       s.config.left = 0
     }
     this.spirits.push(s)
-    this.scrren.el.appendChild(s.el)
     this.calculateSort()
     this.updateAllStyle()
+    return s
   }
 
   calculateSort () {

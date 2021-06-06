@@ -1,12 +1,13 @@
 import { BaseSpirit } from "@/common/base-spirit";
-import { ISpiritParams, SpiritType } from "@/types/config";
+import { SpiritType } from "@/enums";
+import { ISpiritParams } from "@/types/config";
 import { DragLayout } from "..";
 
 export class AbsoluteSpirit extends BaseSpirit {
-  type: SpiritType = 'absolute'
+  type: SpiritType = SpiritType.ABSOLUTE
   constructor (option: Partial<ISpiritParams> = {}, dragLayout: DragLayout) {
     super(option, dragLayout)
-    this.el.className = 'absolute_spirit'
+    this.el.classList.add('absolute_spirit')
     this.config.position = 'absolute'
   }
   

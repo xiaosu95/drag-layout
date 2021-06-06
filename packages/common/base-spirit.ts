@@ -1,5 +1,6 @@
+import { SpiritType } from "@/enums";
 import { ContainerSpirit } from "@/spirit/container-spirit";
-import { ISpiritConfig, ISpiritParams, SpiritType } from "@/types/config";
+import { IOuputConfig, ISpiritConfig, ISpiritParams } from "@/types/config";
 import { DragLayout } from '../index';
 import { throttle } from '../utils/common';
 import { Base } from "./base";
@@ -8,16 +9,16 @@ export class BaseSpirit extends Base {
   uid = uid++
   sort = 0
   subSort = 0
-  type: SpiritType = 'relative'
+  type: SpiritType = SpiritType.DEFAULT
   config: ISpiritConfig = {
     width: '100%',
     height: '100px',
-    mode: 'flex',
     left: 0,
     top: 0,
     position: 'relative',
     render: undefined,
-    disableResizable: false
+    resizable: true,
+    handleResize: undefined
   }
   background = ''
   private _active = false
@@ -30,7 +31,7 @@ export class BaseSpirit extends Base {
   }
   set parentSpirit (s: ContainerSpirit) {
     this._parentSpirit = s
-    s ? this.el.setAttribute('data-parent-type', s.type) : this.el.removeAttribute('data-parent-uid')
+    s ? this.el.setAttribute('data-parent-type', SpiritType[s.type].toLocaleLowerCase()) : this.el.removeAttribute('data-parent-type')
   }
 
 
@@ -69,19 +70,30 @@ export class BaseSpirit extends Base {
     `
   }
 
+  get ouputConfig (): IOuputConfig {
+    return {
+      width: this.clientWidth,
+      height: this.clientHeight,
+      x: this.config.left,
+      y: this.config.top,
+      type: this.type,
+      resizable: this.config.resizable,
+    }
+  }
+
   constructor (option: Partial<ISpiritParams> = {}, dragLayout: DragLayout) {
     super(dragLayout)
     this.config = {
       ...this.config,
       ...option,
     }
-    // this.el.innerHTML = this.uid + ''
     this.initResizableEl()
     this.updateStyle()
-    this.el.className = 'drag_spirit'
+    this.el.className = 'drag_spirit drag_default_spirit'
     this.el.setAttribute('data-uid', String(this.uid))
-    // this.background = `RGBA(${Math.floor(255 * Math.random())}, ${Math.floor(255 * Math.random())}, ${Math.floor(255 * Math.random())})`
+    this.background = `RGBA(${Math.floor(255 * Math.random())}, ${Math.floor(255 * Math.random())}, ${Math.floor(255 * Math.random())})`
     this.initRender()
+    this.screen.el.appendChild(this.el)
   }
 
   initRender () {
@@ -101,7 +113,7 @@ export class BaseSpirit extends Base {
       <span class="drag_layout_resizable_se" data-resizable="se"></span>
     `
     this.el.appendChild(this.resizableEl)
-    this.setDisableResizable(this.config.disableResizable)
+    this.setResizable(this.config.resizable)
   }
 
   updateStyle () {
@@ -113,7 +125,7 @@ export class BaseSpirit extends Base {
     const disX = event.clientX - this.clientWidth
     const disY = event.clientY - this.clientHeight
     const maxW = this.screen.clientWidth - this.config.left
-    document.onmousemove = (ev: MouseEvent) => {
+    const handleMousemove = (ev: MouseEvent) => {
       const clientX = ev.clientX
       const clientY = ev.clientY
       let w = clientX - disX
@@ -132,13 +144,17 @@ export class BaseSpirit extends Base {
       this.updateStyle()
       this.dragLayout.updateAllStyle()
     }
-    document.onmouseup = () => {
-      document.onmouseup = document.onmousemove = null
+    const clear = () => {
+      this.config.handleResize?.(this.ouputConfig)
+      document.removeEventListener('mousemove', handleMousemove)
+      document.removeEventListener('mouseup', clear)
     }
+    document.addEventListener('mousemove', handleMousemove)
+    document.addEventListener('mouseup', clear)
   }
 
   handleMousedown (event: MouseEvent) {
-    if ((event.target as any).getAttribute('data-resizable')) {
+    if ((event.target as HTMLElement).getAttribute('data-resizable')) {
       this.handleResizable(event)
       return
     }
@@ -146,7 +162,7 @@ export class BaseSpirit extends Base {
     const disX = event.clientX - this.config.left
     const disY = event.clientY - this.config.top
     this.screen.createCopySpirit(this)
-    const onmousemove = throttle((ev: MouseEvent) => {
+    const handleMousemove = throttle((ev: MouseEvent) => {
       const clientX = ev.clientX
       const clientY = ev.clientY
       let l = clientX - disX
@@ -158,20 +174,20 @@ export class BaseSpirit extends Base {
     }, 10)
     const clear = () => {
       this.screen.removeCopySpirit()
-      document.removeEventListener('mousemove', onmousemove)
+      document.removeEventListener('mousemove', handleMousemove)
       document.removeEventListener('mouseup', clear)
     }
-    document.addEventListener('mousemove', onmousemove)
+    document.addEventListener('mousemove', handleMousemove)
     document.addEventListener('mouseup', clear)
   }
 
   removeParentSpirit () {
     if (this.parentSpirit) {
-      const idx = this.parentSpirit.childrens.findIndex(ele => ele === this)
+      const idx = this.parentSpirit.children.findIndex(ele => ele === this)
       if (idx !== -1) {
-        this.parentSpirit.childrens.splice(idx, 1)
+        this.parentSpirit.children.splice(idx, 1)
       }
-      if (this.parentSpirit.type === 'container') {
+      if (this.parentSpirit.type === SpiritType.BLOCK_CONTAINER) {
         // this.config.width = '100%'
       }
       this.parentSpirit = undefined
@@ -182,17 +198,17 @@ export class BaseSpirit extends Base {
 
   addParentSpirit (spirit: ContainerSpirit) {
     this.parentSpirit = spirit
-    this.subSort = spirit.childrens.length
+    this.subSort = spirit.children.length
     // this.followParentStyle()
-    spirit.childrens.push(this)
+    spirit.children.push(this)
     this.dragLayout.updateAllStyle()
   }
 
-  setDisableResizable (bool: boolean) {
+  setResizable (bool: boolean) {
     if (bool) {
-      this.resizableEl.classList.remove('show')
-    } else {
       this.resizableEl.classList.add('show')
+    } else {
+      this.resizableEl.classList.remove('show')
     }
   }
 
