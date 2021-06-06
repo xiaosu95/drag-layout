@@ -95,9 +95,9 @@ export class BaseSpirit extends Base {
     this.updateStyle();
     this.el.className = "drag_spirit drag_default_spirit";
     this.el.setAttribute("data-uid", String(this.uid));
-    this.background = `RGBA(${Math.floor(255 * Math.random())}, ${Math.floor(
-      255 * Math.random()
-    )}, ${Math.floor(255 * Math.random())})`;
+    // this.background = `RGBA(${Math.floor(255 * Math.random())}, ${Math.floor(
+    //   255 * Math.random()
+    // )}, ${Math.floor(255 * Math.random())})`;
     this.initRender();
     this.screen.el.appendChild(this.el);
   }
@@ -166,21 +166,28 @@ export class BaseSpirit extends Base {
 
     const disX = event.clientX - this.config.left;
     const disY = event.clientY - this.config.top;
+    let animation, flag;
     this.screen.createCopySpirit(this);
-    const handleMousemove = throttle((ev: MouseEvent) => {
-      const clientX = ev.clientX;
-      const clientY = ev.clientY;
-      const l = clientX - disX;
-      const t = clientY - disY + this.panel.wheelDeltaY;
-      this.screen.copySpirit.config.top = t;
-      this.screen.copySpirit.config.left = l;
-      this.screen.copySpirit.updateStyle();
-      this.screen.checkNewSort(this);
-    }, 10);
+    const handleMousemove = (ev: MouseEvent) => {
+      const func = () => {
+        const l = ev.clientX - disX;
+        const t = ev.clientY - disY + this.panel.wheelDeltaY;
+        this.screen.copySpirit.config.top = t;
+        this.screen.copySpirit.config.left = l;
+        this.screen.copySpirit.updateStyle();
+        this.screen.checkNewSort(this);
+        flag = false;
+      };
+      if (!flag) {
+        flag = true;
+        animation = window.requestAnimationFrame(func);
+      }
+    };
     const clear = () => {
       this.screen.removeCopySpirit();
       document.removeEventListener("mousemove", handleMousemove);
       document.removeEventListener("mouseup", clear);
+      animation && window.cancelAnimationFrame(animation);
     };
     document.addEventListener("mousemove", handleMousemove);
     document.addEventListener("mouseup", clear);
@@ -193,7 +200,7 @@ export class BaseSpirit extends Base {
         this.parentSpirit.children.splice(idx, 1);
       }
       if (this.parentSpirit.type === SpiritType.BLOCK_CONTAINER) {
-        // this.config.width = '100%'
+        this.config.width = "100%";
       }
       this.parentSpirit = undefined;
       this.config.left = 0;

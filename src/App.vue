@@ -167,15 +167,15 @@ export default class App extends Vue {
         console.log(2342423, ouput);
       }
     });
-    this.dragLayout.addSpirit({
-      height: "100px"
-    });
-    this.dragLayout.addSpirit({
-      height: "100px"
-    });
-    this.dragLayout.addSpirit({
-      height: "100px"
-    });
+    // this.dragLayout.addSpirit({
+    //   height: "100px"
+    // });
+    // this.dragLayout.addSpirit({
+    //   height: "100px"
+    // });
+    // this.dragLayout.addSpirit({
+    //   height: "100px"
+    // });
     // this.dragLayout.addSpirit({
     //   height: "100px"
     // });

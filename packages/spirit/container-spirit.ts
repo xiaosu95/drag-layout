@@ -18,7 +18,7 @@ export class ContainerSpirit extends BaseSpirit {
   constructor(option: Partial<ISpiritParams> = {}, dragLayout: DragLayout) {
     super(option, dragLayout);
     this.el.classList.add("container_spirit");
-    this.background = "linear-gradient(45deg, black, transparent)";
+    // this.background = "linear-gradient(45deg, black, transparent)";
     this.initAuxiliaryDrag();
   }
 

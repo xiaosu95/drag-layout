@@ -8,7 +8,7 @@ export class FlexSpirit extends ContainerSpirit {
   constructor(option: Partial<ISpiritParams> = {}, dragLayout: DragLayout) {
     super(option, dragLayout);
     this.el.classList.add("flex_spirit");
-    this.background = "linear-gradient(45deg, #f70000, transparent)";
+    // this.background = "linear-gradient(45deg, #f70000, transparent)";
   }
 
   updateStyle() {
