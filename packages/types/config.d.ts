@@ -17,8 +17,8 @@ export interface IDomConfig {
 }
 
 export interface ISpiritParams {
-  width: string;
-  height: string;
+  width: string | number;
+  height: string | number;
   type?: SpiritType;
   render: Element | (() => any);
   resizable?: boolean;

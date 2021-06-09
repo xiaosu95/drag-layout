@@ -66,8 +66,8 @@ export class BaseSpirit extends Base {
   get style() {
     const { width, height, top, left } = this.config;
     return `
-      width: ${width};
-      height: ${height};
+      width: ${typeof width === "number" ? `${width}px` : width};
+      height: ${typeof height === "number" ? `${height}px` : height};
       transform: translate(${left}px, ${top}px);
       background: ${this.background};
     `;
