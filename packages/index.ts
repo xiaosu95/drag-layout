@@ -5,9 +5,9 @@ import { AbsoluteSpirit } from "./spirit/absolute-spirit";
 import { FixedSpirit } from "./spirit/fixed-spirit";
 import { Panel } from "./utils/panel";
 import "./less/index.less";
-import { ContainerSpirit } from "./spirit/container-spirit";
+import { ContainerSpirit } from "./spirit/flex-container-spirit";
 import { Spirit } from "./types";
-import { FlexSpirit } from "./spirit/flex-spirit";
+import { InlineContainerSpirit } from "./spirit/inline-container-spirit";
 import { Coordinates } from "./utils/coordinates";
 import { MarkLine } from "./utils/markline";
 import { EditMode, SpiritType } from "./enums";
@@ -65,7 +65,7 @@ export class DragLayout {
   get containerSpirits(): ContainerSpirit[] {
     return this.spirits.filter(
       ele =>
-        ele.type === SpiritType.BLOCK_CONTAINER ||
+        ele.type === SpiritType.FLEX_CONTAINER ||
         ele.type === SpiritType.INLINE_CONTAINER
     ) as ContainerSpirit[];
   }
@@ -111,11 +111,11 @@ export class DragLayout {
       case SpiritType.FIXED:
         s = new FixedSpirit(option, this);
         break;
-      case SpiritType.BLOCK_CONTAINER:
+      case SpiritType.FLEX_CONTAINER:
         s = new ContainerSpirit(option, this);
         break;
       case SpiritType.INLINE_CONTAINER:
-        s = new FlexSpirit(option, this);
+        s = new InlineContainerSpirit(option, this);
         break;
       default:
         s = new BaseSpirit(option, this);

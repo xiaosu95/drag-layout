@@ -10,7 +10,7 @@ export class CopySpirit extends BaseSpirit {
     spirit: BaseSpirit
   ) {
     super(option, dragLayout);
-    this.el.className = "copy_spirit";
+    this.el.classList.add("copy_spirit");
     this.el.innerHTML = spirit.el.innerHTML;
     this.config = {
       ...spirit.config

@@ -74,18 +74,12 @@
     z-index: 10;
   }
   &[data-active="true"] {
-    opacity: 0.5;
     outline: #f55 2px solid;
   }
 }
 .container_spirit {
   overflow: visible;
   box-shadow: rgba(0, 0, 0, 0.2) 2px 0px 10px;
-  &[data-active="true"] {
-    .drag_layout_auxiliary_drag {
-      display: none;
-    }
-  }
   .drag_layout_auxiliary_drag {
     position: absolute;
     width: 20px;
@@ -109,7 +103,9 @@
   cursor: all-scroll;
 }
 .copy_spirit {
-  z-index: 1000;
+  z-index: 1000 !important;
+  transition: none;
+  box-shadow: rgba(0, 0, 0, 0.2) 2px 0px 10px;
 }
 
 .drag_layout_resizable {

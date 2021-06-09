@@ -112,6 +112,7 @@ export class Screen extends Base {
           }
         }
       }
+      // 处理非容器
       const s = this.relativeSpirits.find(ele => {
         const offset = ele.config.top - this.copySpirit.config.top;
         return (
@@ -121,7 +122,7 @@ export class Screen extends Base {
       if (s) {
         if (
           s.type === SpiritType.DEFAULT ||
-          s.type === SpiritType.BLOCK_CONTAINER ||
+          s.type === SpiritType.FLEX_CONTAINER ||
           s.type === SpiritType.INLINE_CONTAINER
         ) {
           target.removeParentSpirit();
@@ -136,6 +137,7 @@ export class Screen extends Base {
           Math.abs(lastSpirit.bottomPosition - this.copySpirit.config.top) <
             this.globalConfig.threshold
         ) {
+          target.removeParentSpirit();
           target.sort = lastSpirit.sort + 0.5;
         }
       }

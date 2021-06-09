@@ -162,7 +162,7 @@ export default class App extends Vue {
     // });
     this.dragLayout.addSpirit({
       height: "150px",
-      type: SpiritType.BLOCK_CONTAINER,
+      type: SpiritType.FLEX_CONTAINER,
       handleResize(ouput) {
         console.log(2342423, ouput);
       }

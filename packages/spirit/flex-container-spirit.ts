@@ -4,7 +4,7 @@ import { IOuputConfig, ISpiritParams } from "@/types/config";
 import { DragLayout } from "..";
 
 export class ContainerSpirit extends BaseSpirit {
-  type: SpiritType = SpiritType.BLOCK_CONTAINER;
+  type: SpiritType = SpiritType.FLEX_CONTAINER;
   children: BaseSpirit[] = [];
   auxiliaryDragEl = document.createElement("div");
 
@@ -18,7 +18,6 @@ export class ContainerSpirit extends BaseSpirit {
   constructor(option: Partial<ISpiritParams> = {}, dragLayout: DragLayout) {
     super(option, dragLayout);
     this.el.classList.add("container_spirit");
-    // this.background = "linear-gradient(45deg, black, transparent)";
     this.initAuxiliaryDrag();
   }
 

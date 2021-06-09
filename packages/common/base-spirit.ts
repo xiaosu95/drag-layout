@@ -1,8 +1,7 @@
 import { SpiritType } from "@/enums";
-import { ContainerSpirit } from "@/spirit/container-spirit";
+import { ContainerSpirit } from "@/spirit/flex-container-spirit";
 import { IOuputConfig, ISpiritConfig, ISpiritParams } from "@/types/config";
 import { DragLayout } from "../index";
-import { throttle } from "../utils/common";
 import { Base } from "./base";
 let uid = 0;
 export class BaseSpirit extends Base {
@@ -199,21 +198,22 @@ export class BaseSpirit extends Base {
       if (idx !== -1) {
         this.parentSpirit.children.splice(idx, 1);
       }
-      if (this.parentSpirit.type === SpiritType.BLOCK_CONTAINER) {
+      if (this.parentSpirit.type === SpiritType.FLEX_CONTAINER) {
         this.config.width = "100%";
       }
       this.parentSpirit = undefined;
       this.config.left = 0;
       this.dragLayout.updateAllStyle();
+      this.setResizable(true);
     }
   }
 
   addParentSpirit(spirit: ContainerSpirit) {
     this.parentSpirit = spirit;
     this.subSort = spirit.children.length;
-    // this.followParentStyle()
     spirit.children.push(this);
     this.dragLayout.updateAllStyle();
+    this.setResizable(false);
   }
 
   setResizable(bool: boolean) {

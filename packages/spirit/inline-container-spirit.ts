@@ -1,9 +1,9 @@
 import { SpiritType } from "@/enums";
 import { ISpiritParams } from "@/types/config";
 import { DragLayout } from "..";
-import { ContainerSpirit } from "./container-spirit";
+import { ContainerSpirit } from "./flex-container-spirit";
 
-export class FlexSpirit extends ContainerSpirit {
+export class InlineContainerSpirit extends ContainerSpirit {
   type: SpiritType = SpiritType.INLINE_CONTAINER;
   constructor(option: Partial<ISpiritParams> = {}, dragLayout: DragLayout) {
     super(option, dragLayout);
