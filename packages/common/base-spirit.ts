@@ -17,7 +17,8 @@ export class BaseSpirit extends Base {
     position: "relative",
     render: undefined,
     resizable: true,
-    handleResize: undefined
+    handleResize: undefined,
+    ext: undefined
   };
   background = "";
   private _active = false;
@@ -80,7 +81,8 @@ export class BaseSpirit extends Base {
       x: this.config.left,
       y: this.config.top,
       type: this.type,
-      resizable: this.config.resizable
+      resizable: this.config.resizable,
+      ext: this.config.ext
     };
   }
 
@@ -150,6 +152,7 @@ export class BaseSpirit extends Base {
     };
     const clear = () => {
       this.config.handleResize?.(this.ouputConfig);
+      this.globalConfig.handleResize?.(this, this.ouputConfig);
       document.removeEventListener("mousemove", handleMousemove);
       document.removeEventListener("mouseup", clear);
     };
@@ -184,6 +187,7 @@ export class BaseSpirit extends Base {
     };
     const clear = () => {
       this.screen.removeCopySpirit();
+      this.globalConfig.handleMoved?.(this, this.ouputConfig);
       document.removeEventListener("mousemove", handleMousemove);
       document.removeEventListener("mouseup", clear);
       animation && window.cancelAnimationFrame(animation);

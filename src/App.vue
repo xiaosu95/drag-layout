@@ -8,6 +8,7 @@
       </el-header>
       <el-container class="el-container_b">
         <el-aside style="width:280px;" class="tool_bar">
+          <el-divider content-position="left">设置</el-divider>
           <div>
             <el-switch
               v-model="editMode"
@@ -27,36 +28,62 @@
             >
             </el-switch>
           </div>
-          <div class="components">
-            <div
-              draggable="true"
-              data-component-type="banner"
-              @dragstart="handleDragstart"
-            >
-              我是一个组件
-            </div>
-            <div
-              draggable="true"
-              data-component-type="calendar"
-              @dragstart="handleDragstart"
-            >
-              我是一个日历组件
-            </div>
-            <div
-              draggable="true"
-              data-component-type="table"
-              @dragstart="handleDragstart"
-            >
-              我是一个表格组件
-            </div>
-            <div
-              draggable="true"
-              data-component-type="backtop"
-              @dragstart="handleDragstart"
-            >
-              我是一个backtop组件
+          <el-divider content-position="left">组件库</el-divider>
+          <div class="components_box">
+            <div class="components">
+              <div
+                draggable="true"
+                data-component-type="flex-container"
+                @dragstart="handleDragstart"
+              >
+                flex容器
+              </div>
+              <div
+                draggable="true"
+                data-component-type="inline-container"
+                @dragstart="handleDragstart"
+              >
+                inline容器
+              </div>
+              <div
+                draggable="true"
+                data-component-type="banner"
+                @dragstart="handleDragstart"
+              >
+                banner组件
+              </div>
+              <div
+                draggable="true"
+                data-component-type="calendar"
+                @dragstart="handleDragstart"
+              >
+                日历组件
+              </div>
+              <div
+                draggable="true"
+                data-component-type="table"
+                @dragstart="handleDragstart"
+              >
+                表格组件
+              </div>
+              <div
+                draggable="true"
+                data-component-type="tabs"
+                @dragstart="handleDragstart"
+              >
+                tabs组件
+              </div>
+              <div
+                draggable="true"
+                data-component-type="backtop"
+                @dragstart="handleDragstart"
+              >
+                backtop组件
+              </div>
             </div>
           </div>
+          <el-divider content-position="left">其它操作</el-divider>
+          <el-button @click="getInfo">获取配置</el-button>
         </el-aside>
         <el-main>
           <el-card class="box-card">
@@ -75,6 +102,7 @@ import Banner from "./components/test/banner/index.vue";
 import Calendar from "./components/test/calendar/index.vue";
 import TestTable from "./components/test/table/index.vue";
 import Backtop from "./components/test/backtop/index.vue";
+import Tabs from "./components/test/tabs/index.vue";
 import { SpiritType } from "@/enums";
 @Component
 export default class App extends Vue {
@@ -83,9 +111,14 @@ export default class App extends Vue {
   dragLayout: DragLayout;
   mounted() {
     this.dragLayout = new DragLayout(this.$refs.boxEle as HTMLDivElement, {
-      screenWidth: 800,
-      handleDrop: (event, offset) => {
-        console.log(324234, event, offset);
+      screenWidth: 375,
+      handleResize(a, b) {
+        console.log("handleResize", a, b);
+      },
+      handleMoved(a, b): void {
+        console.log("handleMoved", a, b);
+      },
+      handleDrop: (event, offset): void => {
         const type = event.dataTransfer.getData("type");
         switch (type) {
           case "banner": {
@@ -95,11 +128,8 @@ export default class App extends Vue {
             this.dragLayout.addSpirit({
               left: offset.x,
               top: offset.y,
-              height: "300px",
-              render: $banner.$el,
-              handleResize(ouput) {
-                console.log(2342423, ouput);
-              }
+              height: 300,
+              render: $banner.$el
             });
             break;
           }
@@ -110,7 +140,7 @@ export default class App extends Vue {
             this.dragLayout.addSpirit({
               left: offset.x,
               top: offset.y,
-              height: "400px",
+              height: 400,
               render: $calendar.$el
             });
             break;
@@ -122,7 +152,7 @@ export default class App extends Vue {
             this.dragLayout.addSpirit({
               left: offset.x,
               top: offset.y,
-              height: "300px",
+              height: 300,
               render: $testTable.$el
             });
             break;
@@ -134,9 +164,43 @@ export default class App extends Vue {
             this.dragLayout.addSpirit({
               resizable: false,
               type: SpiritType.FIXED,
-              height: "50px",
-              width: "50px",
+              height: 50,
+              width: 50,
               render: $backtop.$el,
+              left: event.offsetX - 25,
+              top: event.offsetY - 25
+            });
+            break;
+          }
+          case "tabs": {
+            const $tabs = new Tabs({
+              el: document.createElement("div")
+            });
+            this.dragLayout.addSpirit({
+              resizable: false,
+              type: SpiritType.DEFAULT,
+              height: 200,
+              render: $tabs.$el,
+              left: event.offsetX,
+              top: event.offsetY
+            });
+            break;
+          }
+          case "flex-container": {
+            this.dragLayout.addSpirit({
+              resizable: false,
+              type: SpiritType.FLEX_CONTAINER,
+              height: 100,
+              left: event.offsetX,
+              top: event.offsetY
+            });
+            break;
+          }
+          case "inline-container": {
+            this.dragLayout.addSpirit({
+              resizable: false,
+              type: SpiritType.INLINE_CONTAINER,
+              height: 150,
               left: event.offsetX,
               top: event.offsetY
             });
@@ -153,20 +217,20 @@ export default class App extends Vue {
     // this.dragLayout.addSpirit({
     //   height: "200px"
     // });
-    this.dragLayout.addSpirit({
-      height: "100px",
-      type: SpiritType.INLINE_CONTAINER
-    });
+    // this.dragLayout.addSpirit({
+    //   height: "100px",
+    //   type: SpiritType.INLINE_CONTAINER
+    // });
     // this.dragLayout.addSpirit({
     //   height: "100px"
     // });
-    this.dragLayout.addSpirit({
-      height: "150px",
-      type: SpiritType.FLEX_CONTAINER,
-      handleResize(ouput) {
-        console.log(2342423, ouput);
-      }
-    });
+    // this.dragLayout.addSpirit({
+    //   height: "150px",
+    //   type: SpiritType.FLEX_CONTAINER,
+    //   handleResize(ouput) {
+    //     console.log(2342423, ouput);
+    //   }
+    // });
     // this.dragLayout.addSpirit({
     //   height: "100px"
     // });
@@ -202,6 +266,7 @@ export default class App extends Vue {
   }
 
   handleDragstart(event: DragEvent) {
+    console.log(event);
     event.dataTransfer.setData(
       "type",
       (event.target as any).getAttribute("data-component-type")
@@ -214,6 +279,10 @@ export default class App extends Vue {
 
   changeAdsorption(bool: boolean) {
     this.dragLayout.setAdsorption(bool);
+  }
+
+  getInfo() {
+    console.log(this.dragLayout.getInfo());
   }
 }
 </script>
@@ -237,12 +306,23 @@ li {
 .screen_box {
   height: 100%;
 }
+.components_box {
+  height: calc(100% - 300px);
+  overflow: auto;
+}
 .components {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
   div {
-    width: 100px;
+    width: 120px;
     height: 100px;
     border: 1px #ddd solid;
     font-size: 12px;
+    margin-bottom: 10px;
+    line-height: 100px;
+    text-align: center;
+    background: #eee;
   }
 }
 #app {

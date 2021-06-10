@@ -11,8 +11,8 @@ export class Screen extends Base {
   maskEl = document.createElement("span");
   config: IScreenConfig = {
     boxEle: null,
-    left: 0,
-    top: 0
+    left: 40,
+    top: 40
   };
   copySpirit: CopySpirit = undefined;
   wheelDeltaY = 0; // 滚动y值

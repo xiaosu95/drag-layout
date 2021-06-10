@@ -1,6 +1,6 @@
 <template>
-  <div class="qMessage">
-    <el-carousel height="300px">
+  <div class="banner">
+    <el-carousel class="banner_box" height="100%">
       <el-carousel-item v-for="item in list" :key="item">
         <img :src="item" alt="" />
       </el-carousel-item>
@@ -21,8 +21,11 @@ export default class Banner extends Vue {
 </script>
 
 <style lang="less" scoped>
-.qMessage {
+.banner {
   width: 100%;
   height: 100%;
+  .banner_box {
+    height: 100%;
+  }
 }
 </style>

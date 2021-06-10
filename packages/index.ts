@@ -1,4 +1,4 @@
-import { IConfig, IParams, ISpiritParams } from "./types/config";
+import { IConfig, IParams, ISpiritParams, IOuputConfig } from "./types/config";
 import { Screen } from "./common/screen";
 import { BaseSpirit } from "./common/base-spirit";
 import { AbsoluteSpirit } from "./spirit/absolute-spirit";
@@ -70,6 +70,10 @@ export class DragLayout {
     ) as ContainerSpirit[];
   }
 
+  get firstHierarchySpirits() {
+    return this.spirits.filter(ele => !ele.parentSpirit);
+  }
+
   get allSpiritCoordinates() {
     return {
       x: [
@@ -80,13 +84,6 @@ export class DragLayout {
         ...this.spirits.map(ele => ele.config.top),
         ...this.spirits.map(ele => ele.bottomPosition)
       ]
-    };
-  }
-
-  getSpiritPosition(spirit: BaseSpirit) {
-    return {
-      top: spirit.bottomPosition,
-      left: spirit.rightPosition
     };
   }
 
@@ -177,5 +174,19 @@ export class DragLayout {
   setAdsorption(bool: boolean) {
     console.log(bool);
     this.config.adsorption = bool;
+  }
+
+  getInfo<T = IOuputConfig>(): T[] {
+    return this.firstHierarchySpirits.map(ele => {
+      return this.config.infoDataBridge
+        ? this.config.infoDataBridge(ele.ouputConfig)
+        : ele.ouputConfig;
+    });
+  }
+
+  loadSpirits(list: ISpiritParams[]) {
+    list.forEach(ele => {
+      this.addSpirit(ele);
+    });
   }
 }

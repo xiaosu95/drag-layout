@@ -1,4 +1,5 @@
 import { EditMode, SpiritType } from "@/enums";
+import { Spirit } from ".";
 
 export interface IOuputConfig {
   width: number;
@@ -8,6 +9,7 @@ export interface IOuputConfig {
   type: SpiritType;
   resizable: boolean;
   children?: IOuputConfig[];
+  ext: any;
 }
 export interface IDomConfig {
   width: string;
@@ -25,10 +27,17 @@ export interface ISpiritParams {
   left: number;
   top: number;
   handleResize: (ouput: IOuputConfig) => void;
+  ext: any;
+  children?: ISpiritParams[];
 }
 
 export interface ISpiritConfig extends ISpiritParams {
   position: "absolute" | "relative" | "fixed";
+}
+
+export interface IFixedSpiritParams extends ISpiritParams {
+  xPositionMode: "left" | "right";
+  yPositionMode: "top" | "bottom";
 }
 
 export interface IScreenConfig {
@@ -50,6 +59,9 @@ export interface IParams {
     }
   ) => void;
   screenWidth: number;
+  infoDataBridge?: (info: IOuputConfig) => any;
+  handleResize?: (spirit: Spirit, ouput: IOuputConfig) => void;
+  handleMoved?: (spirit: Spirit, ouput: IOuputConfig) => void;
 }
 
 export interface IConfig extends IParams {
