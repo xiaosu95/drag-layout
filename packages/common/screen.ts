@@ -2,7 +2,7 @@ import { IScreenConfig } from "@/types/config";
 import { CopySpirit } from "@/spirit/copy-spirit";
 import { DragLayout } from "..";
 import { BaseSpirit } from "./base-spirit";
-import { getSpiritDom } from "@/utils/common";
+import { $offset, getSpiritDom } from "@/utils/common";
 import { Base } from "./base";
 import { Spirit } from "@/types";
 import { EditMode, SpiritType } from "@/enums";
@@ -58,6 +58,7 @@ export class Screen extends Base {
       event.preventDefault();
     };
     this.el.ondrop = (event: DragEvent) => {
+      console.log(event);
       const spiritDom: HTMLDivElement = getSpiritDom((event as any).toElement);
       let spirit: Spirit;
       if (spiritDom) {
@@ -65,9 +66,14 @@ export class Screen extends Base {
           Number(spiritDom.getAttribute("data-uid"))
         );
       }
+      const offset = spirit && $offset(event.target as HTMLElement, spirit.el);
       this.globalConfig.handleDrop(event, {
-        x: spirit ? spirit.config.left + event.offsetX : event.offsetX,
-        y: spirit ? spirit.config.top + event.offsetY : event.offsetY
+        x: spirit
+          ? spirit.config.left + event.offsetX + offset.left
+          : event.offsetX,
+        y: spirit
+          ? spirit.config.top + event.offsetY + offset.top
+          : event.offsetY
       });
     };
   }

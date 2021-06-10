@@ -27,3 +27,18 @@ export const throttle = function(func: Function, delay: number) {
     }
   };
 };
+
+export function $offset(ele: HTMLElement, toEle: HTMLElement = document.body) {
+  const obj = { left: 0, top: 0 };
+  if (ele === toEle) return obj;
+  (function _offset(ele2: any) {
+    if (ele2.offsetParent) {
+      obj.left += ele2.offsetLeft;
+      obj.top += ele2.offsetTop;
+      if (ele2.offsetParent !== toEle) {
+        _offset(ele2.offsetParent);
+      }
+    }
+  })(ele);
+  return obj;
+}

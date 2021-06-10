@@ -167,8 +167,8 @@ export default class App extends Vue {
               height: 50,
               width: 50,
               render: $backtop.$el,
-              left: event.offsetX - 25,
-              top: event.offsetY - 25
+              left: offset.x - 25,
+              top: offset.y - 25
             });
             break;
           }
@@ -181,8 +181,8 @@ export default class App extends Vue {
               type: SpiritType.DEFAULT,
               height: 200,
               render: $tabs.$el,
-              left: event.offsetX,
-              top: event.offsetY
+              left: offset.x,
+              top: offset.y
             });
             break;
           }
