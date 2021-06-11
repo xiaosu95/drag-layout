@@ -4,8 +4,10 @@ import { Spirit } from ".";
 export interface IOuputConfig {
   width: number;
   height: number;
-  x: number;
-  y: number;
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
   type: SpiritType;
   resizable: boolean;
   children?: IOuputConfig[];
@@ -26,6 +28,8 @@ export interface ISpiritParams {
   resizable?: boolean;
   left: number;
   top: number;
+  right: number;
+  bottom: number;
   handleResize: (ouput: IOuputConfig) => void;
   ext: any;
   children?: ISpiritParams[];

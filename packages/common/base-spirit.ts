@@ -14,6 +14,8 @@ export class BaseSpirit extends Base {
     height: "100px",
     left: 0,
     top: 0,
+    right: 0,
+    bottom: 0,
     position: "relative",
     render: undefined,
     resizable: true,
@@ -65,11 +67,14 @@ export class BaseSpirit extends Base {
   }
 
   get style() {
-    const { width, height, top, left } = this.config;
+    const { width, height, top, left, bottom, right } = this.config;
+    const _top = top || this.screenHeight - bottom - this.clientHeight;
+    const _left =
+      left || this.globalConfig.screenWidth - right - this.clientWidth;
     return `
       width: ${typeof width === "number" ? `${width}px` : width};
       height: ${typeof height === "number" ? `${height}px` : height};
-      transform: translate(${left}px, ${top}px);
+      transform: translate(${_left}px, ${_top}px);
       background: ${this.background};
     `;
   }
@@ -78,8 +83,11 @@ export class BaseSpirit extends Base {
     return {
       width: this.clientWidth,
       height: this.clientHeight,
-      x: this.config.left,
-      y: this.config.top,
+      left: this.config.left,
+      top: this.config.top,
+      right:
+        this.globalConfig.screenWidth - this.config.left - this.clientWidth,
+      bottom: this.screenHeight - this.config.top - this.clientHeight,
       type: this.type,
       resizable: this.config.resizable,
       ext: this.config.ext
