@@ -157,9 +157,7 @@ export class Screen extends Base {
     if (mode === EditMode.FIXED) {
       this.maskEl.setAttribute(
         "style",
-        `
-        height: ${this.screenHeight - this.globalConfig.firstScreenHeight}px;
-      `
+        `top: ${this.globalConfig.firstScreenHeight}px;`
       );
     }
   }
