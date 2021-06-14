@@ -12,10 +12,10 @@ export class BaseSpirit extends Base {
   config: ISpiritConfig = {
     width: "100%",
     height: "100px",
-    left: 0,
-    top: 0,
-    right: 0,
-    bottom: 0,
+    left: undefined,
+    top: undefined,
+    right: undefined,
+    bottom: undefined,
     position: "relative",
     render: undefined,
     resizable: true,
@@ -67,30 +67,42 @@ export class BaseSpirit extends Base {
   }
 
   get style() {
-    const { width, height, top, left, bottom, right } = this.config;
-    const _top = top || this.screenHeight - bottom - this.clientHeight;
-    const _left =
-      left || this.globalConfig.screenWidth - right - this.clientWidth;
+    const { width, height } = this.config;
+    const offset = this.getPosition();
     return `
       width: ${typeof width === "number" ? `${width}px` : width};
       height: ${typeof height === "number" ? `${height}px` : height};
-      transform: translate(${_left}px, ${_top}px);
+      transform: translate(${offset.left}px, ${offset.top}px);
       background: ${this.background};
     `;
   }
 
   get ouputConfig(): IOuputConfig {
+    const { clientWidth, clientHeight, type } = this;
+    const offset = this.getPosition();
+    const right =
+      this.globalConfig.screenWidth - offset.left - this.clientWidth;
+    const bottom = this.screenHeight - offset.top - this.clientHeight;
     return {
-      width: this.clientWidth,
-      height: this.clientHeight,
-      left: this.config.left,
-      top: this.config.top,
-      right:
-        this.globalConfig.screenWidth - this.config.left - this.clientWidth,
-      bottom: this.screenHeight - this.config.top - this.clientHeight,
-      type: this.type,
+      width: clientWidth,
+      height: clientHeight,
+      left: offset.left,
+      top: offset.top,
+      right,
+      bottom,
+      type,
       resizable: this.config.resizable,
-      ext: this.config.ext
+      ext: this.config.ext,
+      percentagePosition: {
+        left: Number(
+          ((offset.left / this.globalConfig.screenWidth) * 100).toFixed(2)
+        ),
+        right: Number(
+          ((right / this.globalConfig.screenWidth) * 100).toFixed(2)
+        ),
+        top: Number(((offset.top / this.screenHeight) * 100).toFixed(2)),
+        bottom: Number(((bottom / this.screenHeight) * 100).toFixed(2))
+      }
     };
   }
 
@@ -234,6 +246,20 @@ export class BaseSpirit extends Base {
     } else {
       this.resizableEl.classList.remove("show");
     }
+  }
+
+  getPosition() {
+    const {
+      config: { left, top, right, bottom },
+      clientWidth
+    } = this;
+    const _top = top ?? this.screenHeight - bottom - this.clientHeight ?? 0;
+    const _left =
+      left ?? this.globalConfig.screenWidth - right - clientWidth ?? 0;
+    return {
+      top: _top,
+      left: _left
+    };
   }
 
   destroy() {

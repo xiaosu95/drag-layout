@@ -24,9 +24,9 @@ export class AbsoluteSpirit extends BaseSpirit {
       this.handleResizable(event);
       return;
     }
-
-    const disX = event.clientX - this.config.left;
-    const disY = event.clientY - this.config.top;
+    const offset = this.getPosition();
+    const disX = event.clientX - offset.left;
+    const disY = event.clientY - offset.top;
     this.markLine.show();
     const onmousemove = (ev: MouseEvent) => {
       const clientX = ev.clientX;

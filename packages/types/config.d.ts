@@ -1,17 +1,20 @@
 import { EditMode, SpiritType } from "@/enums";
 import { Spirit } from ".";
 
-export interface IOuputConfig {
-  width: number;
-  height: number;
+export interface IPosition {
   left: number;
   right: number;
   top: number;
   bottom: number;
+}
+export interface IOuputConfig extends IPosition {
+  width: number;
+  height: number;
   type: SpiritType;
   resizable: boolean;
   children?: IOuputConfig[];
   ext: any;
+  percentagePosition: IPosition;
 }
 export interface IDomConfig {
   width: string;

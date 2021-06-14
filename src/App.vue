@@ -167,8 +167,10 @@ export default class App extends Vue {
               height: 50,
               width: 50,
               render: $backtop.$el,
-              left: offset.x - 25,
-              top: offset.y - 25
+              // left: offset.x - 25,
+              bottom: 30,
+              right: 30
+              // top: offset.y - 25
             });
             break;
           }
