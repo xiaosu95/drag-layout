@@ -241,6 +241,7 @@ export class BaseSpirit extends Base {
   }
 
   setResizable(bool: boolean) {
+    this.config.resizable = bool;
     if (bool) {
       this.resizableEl.classList.add("show");
     } else {
