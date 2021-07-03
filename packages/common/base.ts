@@ -8,7 +8,10 @@ export class Base {
   }
 
   get screenHeight() {
-    return this.relativeSpirits.reduce((a, b) => a + b.clientHeight, 0);
+    return Math.max(
+      this.globalConfig.firstScreenHeight,
+      this.relativeSpirits.reduce((a, b) => a + b.clientHeight, 0)
+    );
   }
 
   get panel() {

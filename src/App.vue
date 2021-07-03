@@ -161,14 +161,17 @@ export default class App extends Vue {
             const $backtop = new Backtop({
               el: document.createElement("div")
             });
+            console.log(345353453);
             this.dragLayout.addSpirit({
               resizable: false,
-              type: SpiritType.FIXED,
+              type: SpiritType.ABSOLUTE,
               height: 50,
               width: 50,
               render: $backtop.$el,
-              left: offset.x - 25,
-              top: offset.y - 25
+              // left: offset.x - 25,
+              // top: offset.y - 25
+              right: 100,
+              bottom: 100
             });
             break;
           }

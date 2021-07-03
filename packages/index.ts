@@ -177,7 +177,6 @@ export class DragLayout {
   }
 
   getInfo<T = IOuputConfig>(): T[] {
-    console.log(this.scrren.screenHeight, this.scrren.clientHeight);
     return this.firstHierarchySpirits.map(ele => {
       return this.config.infoDataBridge
         ? this.config.infoDataBridge(ele.ouputConfig)

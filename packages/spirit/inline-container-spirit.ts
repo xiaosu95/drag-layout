@@ -20,7 +20,7 @@ export class InlineContainerSpirit extends ContainerSpirit {
     if (idx === -1 || !this.children.length) return this.config.top;
     return Math.max(
       ...this.children
-        .filter((ele, _idx) => _idx <= idx)
+        .filter((_ele, _idx) => _idx <= idx)
         .map(ele => ele.bottomPosition)
     );
   }
@@ -64,8 +64,8 @@ export class InlineContainerSpirit extends ContainerSpirit {
         ele.updateStyle();
       });
       this.config.height =
-        (this.getchildrenMaxBottom(this.children.length) - this.config.top ||
-          100) + "px";
+        this.getchildrenMaxBottom(this.children.length) - this.config.top ||
+        100;
     }
   }
 }

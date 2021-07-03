@@ -21,10 +21,7 @@ export class Screen extends Base {
     const { left, top } = this.config;
     return `
       width: ${this.globalConfig.screenWidth}px;
-      height: ${Math.max(
-        this.globalConfig.firstScreenHeight,
-        this.screenHeight
-      )}px;
+      height: ${this.screenHeight}px;
       transform: translate(${left}px, ${top}px);
     `;
   }
@@ -58,7 +55,6 @@ export class Screen extends Base {
       event.preventDefault();
     };
     this.el.ondrop = (event: DragEvent) => {
-      console.log(event);
       const spiritDom: HTMLDivElement = getSpiritDom((event as any).toElement);
       let spirit: Spirit;
       if (spiritDom) {

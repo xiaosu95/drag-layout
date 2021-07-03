@@ -67,21 +67,34 @@ export class BaseSpirit extends Base {
   }
 
   get style() {
-    const { width, height } = this.config;
     const offset = this.getPosition();
     return `
-      width: ${typeof width === "number" ? `${width}px` : width};
-      height: ${typeof height === "number" ? `${height}px` : height};
+      width: ${this.clientWidth}px;
+      height: ${this.clientHeight}px;
       transform: translate(${offset.left}px, ${offset.top}px);
       background: ${this.background};
     `;
   }
 
+  get clientWidth() {
+    return typeof this.config.width === "number"
+      ? this.config.width
+      : (Number((this.config.width as string).match(/\d+/g)[0]) / 100) *
+          this.globalConfig.screenWidth;
+  }
+
+  get clientHeight() {
+    return typeof this.config.height === "number"
+      ? this.config.height
+      : (Number((this.config.height as string).match(/\d+/g)[0]) / 100) *
+          this.screenHeight;
+  }
+
   get ouputConfig(): IOuputConfig {
     const { clientWidth, clientHeight, type } = this;
     const offset = this.getPosition();
-    const right =
-      this.globalConfig.screenWidth - offset.left - this.clientWidth;
+    const screenWidth = this.globalConfig.screenWidth;
+    const right = screenWidth - offset.left - this.clientWidth;
     const bottom = this.screenHeight - offset.top - this.clientHeight;
     return {
       width: clientWidth,
@@ -93,15 +106,16 @@ export class BaseSpirit extends Base {
       type,
       resizable: this.config.resizable,
       ext: this.config.ext,
-      percentagePosition: {
-        left: Number(
-          ((offset.left / this.globalConfig.screenWidth) * 100).toFixed(2)
-        ),
-        right: Number(
-          ((right / this.globalConfig.screenWidth) * 100).toFixed(2)
-        ),
-        top: Number(((offset.top / this.screenHeight) * 100).toFixed(2)),
-        bottom: Number(((bottom / this.screenHeight) * 100).toFixed(2))
+      percentage: {
+        left: this.calculatePercentageValue(offset.left, screenWidth),
+        right: this.calculatePercentageValue(right, screenWidth),
+        top: this.calculatePercentageValue(offset.top, this.screenHeight),
+        bottom: this.calculatePercentageValue(bottom, this.screenHeight),
+        width: this.calculatePercentageValue(clientWidth, screenWidth),
+        height: this.calculatePercentageValue(
+          clientHeight,
+          this.globalConfig.firstScreenHeight
+        )
       }
     };
   }
@@ -121,6 +135,10 @@ export class BaseSpirit extends Base {
     // )}, ${Math.floor(255 * Math.random())})`;
     this.initRender();
     this.screen.el.appendChild(this.el);
+  }
+
+  calculatePercentageValue(val1: number, val2: number) {
+    return Number(((val1 / val2) * 100).toFixed(2));
   }
 
   initRender() {
@@ -162,10 +180,10 @@ export class BaseSpirit extends Base {
         w = maxW;
       }
       if (type === "s" || type === "se") {
-        this.config.height = `${h}px`;
+        this.config.height = h;
       }
       if (type === "se" || type === "e") {
-        this.config.width = `${w}px`;
+        this.config.width = w;
       }
       this.updateStyle();
       this.dragLayout.updateAllStyle();
