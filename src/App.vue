@@ -163,7 +163,7 @@ export default class App extends Vue {
             });
             this.dragLayout.addSpirit({
               resizable: false,
-              type: SpiritType.ABSOLUTE,
+              type: SpiritType.FIXED,
               height: 50,
               width: 50,
               render: $backtop.$el,

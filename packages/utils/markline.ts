@@ -4,8 +4,8 @@ import { DragLayout } from "..";
 export class MarkLine extends Base {
   xEl = document.createElement("div");
   yEl = document.createElement("div");
-  adsorptionX = 0;
-  adsorptionY = 0;
+  adsorptionX = undefined;
+  adsorptionY = undefined;
   adsorptionXEl = document.createElement("div");
   adsorptionYEl = document.createElement("div");
   el = document.createElement("div");
@@ -55,7 +55,7 @@ export class MarkLine extends Base {
       display: none;
     `
     );
-    this.adsorptionX = 0;
+    this.adsorptionX = undefined;
   }
 
   showAdsorptionXEl(y: number) {
@@ -76,7 +76,7 @@ export class MarkLine extends Base {
       display: none;
     `
     );
-    this.adsorptionY = 0;
+    this.adsorptionY = undefined;
   }
 
   updateStyle() {

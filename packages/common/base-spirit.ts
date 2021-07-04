@@ -90,6 +90,11 @@ export class BaseSpirit extends Base {
           this.screenHeight;
   }
 
+  // 上级容器的宽度
+  get parentWidth() {
+    return this.parentSpirit?.clientWidth || this.globalConfig.screenWidth;
+  }
+
   get ouputConfig(): IOuputConfig {
     const { clientWidth, clientHeight, type } = this;
     const offset = this.getPosition();
@@ -168,9 +173,7 @@ export class BaseSpirit extends Base {
     const type = target.getAttribute("data-resizable");
     const disX = event.clientX - this.clientWidth;
     const disY = event.clientY - this.clientHeight;
-    const maxW =
-      (this.parentSpirit?.rightPosition || this.screen.clientWidth) -
-      this.config.left;
+    const maxW = this.parentWidth - this.config.left;
     const handleMousemove = (ev: MouseEvent) => {
       const clientX = ev.clientX;
       const clientY = ev.clientY;
@@ -214,8 +217,11 @@ export class BaseSpirit extends Base {
       const func = () => {
         const l = ev.clientX - disX;
         const t = ev.clientY - disY + this.panel.wheelDeltaY;
+        const maxL = this.parentWidth - this.clientWidth;
         this.screen.copySpirit.config.top = t;
         this.screen.copySpirit.config.left = l;
+        // TODO: 增加left，性能暂未测试，待定
+        this.config.left = Math.max(Math.min(l, maxL), 0);
         this.screen.copySpirit.updateStyle();
         this.screen.checkNewSort(this);
         flag = false;

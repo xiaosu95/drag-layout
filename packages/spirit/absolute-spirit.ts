@@ -47,10 +47,10 @@ export class AbsoluteSpirit extends BaseSpirit {
     };
 
     const clear = () => {
-      if (this.markLine.adsorptionX) {
+      if (this.markLine.adsorptionX !== undefined) {
         this.config.left = this.markLine.adsorptionX;
       }
-      if (this.markLine.adsorptionY) {
+      if (this.markLine.adsorptionY !== undefined) {
         this.config.top = this.markLine.adsorptionY;
       }
       this.markLine.hide();
