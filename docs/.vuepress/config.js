@@ -1,4 +1,5 @@
 module.exports = {
+  base: '/drag-layout/',
   title: 'DragLayout',
   themeConfig: {
     sidebar: "auto",

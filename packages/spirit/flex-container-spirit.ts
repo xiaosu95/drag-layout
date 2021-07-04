@@ -7,6 +7,8 @@ export class ContainerSpirit extends BaseSpirit {
   type: SpiritType = SpiritType.FLEX_CONTAINER;
   children: BaseSpirit[] = [];
   auxiliaryDragEl = document.createElement("div");
+  lockBtn = document.createElement("div");
+  lock = true;
 
   get ouputConfig(): IOuputConfig {
     return {
@@ -18,7 +20,9 @@ export class ContainerSpirit extends BaseSpirit {
   constructor(option: Partial<ISpiritParams> = {}, dragLayout: DragLayout) {
     super(option, dragLayout);
     this.el.classList.add("container_spirit");
-    this.initAuxiliaryDrag();
+    this.el.classList.add("lock");
+    // this.initAuxiliaryDrag();
+    this.initLockBtn();
   }
 
   handleMousedown(event: MouseEvent) {
@@ -31,6 +35,17 @@ export class ContainerSpirit extends BaseSpirit {
       <span></span>
     `;
     this.el.appendChild(this.auxiliaryDragEl);
+  }
+
+  initLockBtn() {
+    this.lockBtn.className = "drag_layout_auxiliary_lock_btn";
+    this.el.appendChild(this.lockBtn);
+    this.lockBtn.onmousedown = ev => {
+      ev.stopPropagation();
+    };
+    this.lockBtn.onclick = () => {
+      this.setLock(!this.lock);
+    };
   }
 
   updateStyle() {
@@ -48,7 +63,7 @@ export class ContainerSpirit extends BaseSpirit {
         const prev = this.children[idx - 1];
         ele.config.left = prev ? prev.rightPosition : left;
         ele.config.top = top;
-        ele.config.width = `${100 / this.children.length}%`;
+        ele.config.width = this.clientWidth / this.children.length;
         ele.config.height = height;
         ele.updateStyle();
       });
@@ -63,6 +78,7 @@ export class ContainerSpirit extends BaseSpirit {
   }
 
   checkCanInsert() {
+    if (this.lock) return false;
     const { copySpirit } = this.screen;
     const {
       config: { left, top }
@@ -112,5 +128,12 @@ export class ContainerSpirit extends BaseSpirit {
     }
     this.updateStyle();
     this.calculateChildSort();
+  }
+
+  setLock(bool: boolean) {
+    this.lock = bool;
+    this.el.classList[bool ? "add" : "remove"]("lock");
+    this.lockBtn.classList[bool ? "remove" : "add"]("unlock");
+    this.setResizable(this.config.resizable && bool);
   }
 }

@@ -161,7 +161,6 @@ export default class App extends Vue {
             const $backtop = new Backtop({
               el: document.createElement("div")
             });
-            console.log(345353453);
             this.dragLayout.addSpirit({
               resizable: false,
               type: SpiritType.ABSOLUTE,
@@ -191,7 +190,7 @@ export default class App extends Vue {
           }
           case "flex-container": {
             this.dragLayout.addSpirit({
-              resizable: false,
+              resizable: true,
               type: SpiritType.FLEX_CONTAINER,
               height: 100,
               left: offset.x,
@@ -201,7 +200,7 @@ export default class App extends Vue {
           }
           case "inline-container": {
             this.dragLayout.addSpirit({
-              resizable: false,
+              resizable: true,
               type: SpiritType.INLINE_CONTAINER,
               height: 150,
               left: offset.x,

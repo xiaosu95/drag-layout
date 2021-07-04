@@ -168,7 +168,9 @@ export class BaseSpirit extends Base {
     const type = target.getAttribute("data-resizable");
     const disX = event.clientX - this.clientWidth;
     const disY = event.clientY - this.clientHeight;
-    const maxW = this.screen.clientWidth - this.config.left;
+    const maxW =
+      (this.parentSpirit?.rightPosition || this.screen.clientWidth) -
+      this.config.left;
     const handleMousemove = (ev: MouseEvent) => {
       const clientX = ev.clientX;
       const clientY = ev.clientY;
@@ -259,7 +261,6 @@ export class BaseSpirit extends Base {
   }
 
   setResizable(bool: boolean) {
-    this.config.resizable = bool;
     if (bool) {
       this.resizableEl.classList.add("show");
     } else {

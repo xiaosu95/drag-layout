@@ -61,11 +61,22 @@ export class InlineContainerSpirit extends ContainerSpirit {
           ele.config.top = top;
         }
         ele.line = line;
+        // 限制子容器宽度
+        const maxW = this.rightPosition - ele.config.left;
+        if (ele.config.width > maxW) {
+          ele.config.width = maxW;
+        }
         ele.updateStyle();
       });
       this.config.height =
         this.getchildrenMaxBottom(this.children.length) - this.config.top ||
         100;
     }
+  }
+  setLock(bool: boolean) {
+    super.setLock(bool);
+    this.children.forEach(ele => {
+      ele.setResizable(ele.config.resizable && !bool);
+    });
   }
 }
