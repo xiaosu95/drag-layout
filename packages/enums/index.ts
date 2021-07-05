@@ -8,7 +8,8 @@ export enum SpiritType {
   ABSOLUTE,
   FIXED,
   FLEX_CONTAINER,
-  INLINE_CONTAINER
+  INLINE_CONTAINER,
+  FLOW_CONTAINER
 }
 
 /**
