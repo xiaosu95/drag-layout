@@ -1,14 +1,18 @@
 import { SpiritType } from "@/enums";
+import { Spirit } from "@/types";
 import { ISpiritParams } from "@/types/config";
 import { DragLayout } from "..";
 import { ContainerSpirit } from "./flex-container-spirit";
 
-export class InlineContainerSpirit extends ContainerSpirit {
+export class FlowContainerSpirit extends ContainerSpirit {
   type: SpiritType = SpiritType.FLOW_CONTAINER;
   constructor(option: Partial<ISpiritParams> = {}, dragLayout: DragLayout) {
     super(option, dragLayout);
     this.el.classList.add("flow_spirit");
-    // this.background = "linear-gradient(45deg, #f70000, transparent)";
+  }
+
+  get leftSortChildren() {
+    return this.children.sort((a, b) => a.config.left - b.config.left);
   }
 
   updateStyle() {
@@ -25,53 +29,75 @@ export class InlineContainerSpirit extends ContainerSpirit {
     );
   }
 
-  calculateChildSort() {
-    this.children.sort(
-      (a, b) =>
-        a.line * this.clientWidth +
-        a.config.left -
-        (b.line * this.clientWidth + b.config.left)
-    );
-    this.children.forEach((ele, idx) => {
-      ele.subSort = idx;
-    });
+  calculateSpiritStyle(spirit: Spirit) {
+    const {
+      config: { left, top },
+      clientWidth: width
+    } = (spirit.active && this.copySpirit) || spirit;
+    const _c = this.children
+      .filter(item => {
+        const {
+          config: { left: _left, top: _top },
+          clientWidth: _width
+        } = item;
+        return (
+          spirit !== item && // 排除自己
+          top >= _top && // y轴目标top处于其它容器top之上
+          // 容器x轴投影相交判断
+          Math.abs(Math.abs(left + width / 2) - Math.abs(_left + _width / 2)) <
+            (width + _width) / 2
+        );
+      })
+      .sort((a, b) => b.bottomPosition - a.bottomPosition);
+    spirit.config.top = _c[0]?.bottomPosition || this.config.top;
   }
 
   syncChildrenStyle() {
     if (this.children) {
-      let line = 0;
-      this.children.forEach((ele, idx) => {
-        const {
-          config: { left, top }
-        } = this;
-        const prev = this.children[idx - 1];
-        if (prev) {
-          const isNewLine =
-            prev.rightPosition + ele.clientWidth > this.rightPosition;
-          if (isNewLine) {
-            ele.config.left = left;
-            ele.config.top = this.getchildrenMaxBottom(idx - 1);
-            line++;
-          } else {
-            ele.config.left = prev.rightPosition;
-            ele.config.top = prev.config.top;
+      this.children
+        .sort((a, b) => Number(b.active) - Number(a.active)) // 优先active容器计算位置
+        .forEach(ele => {
+          this.calculateSpiritStyle(ele);
+          // 限制子容器宽度
+          const maxW = this.rightPosition - ele.config.left;
+          if (ele.config.width > maxW) {
+            ele.config.width = maxW;
           }
-        } else {
-          ele.config.left = left;
-          ele.config.top = top;
-        }
-        ele.line = line;
-        // 限制子容器宽度
-        const maxW = this.rightPosition - ele.config.left;
-        if (ele.config.width > maxW) {
-          ele.config.width = maxW;
-        }
-        ele.updateStyle();
-      });
+          ele.updateStyle();
+        });
       this.config.height =
         this.getchildrenMaxBottom(this.children.length) - this.config.top ||
         100;
     }
+  }
+
+  checkCanInsert() {
+    if (this.lock) return false;
+    const { copySpirit } = this.screen;
+    const {
+      config: { left, top }
+    } = copySpirit;
+    const { activeSpirit } = this.dragLayout;
+    if (this.uid === copySpirit.copyUid) return;
+    const w =
+      Math.abs(this.centerLineX - left) < this.clientWidth / 2 - 10 &&
+      Math.abs(this.centerLineY - top) < this.clientHeight / 2 - 10;
+    if (activeSpirit.parentSpirit !== this) {
+      if (w) {
+        activeSpirit.removeParentSpirit();
+        activeSpirit.addParentSpirit(this);
+        activeSpirit.config.left = left;
+        activeSpirit.config.top = top;
+        return true;
+      }
+      return false;
+    } else {
+      return w;
+    }
+  }
+
+  checkNewSort() {
+    this.updateStyle();
   }
   setLock(bool: boolean) {
     super.setLock(bool);

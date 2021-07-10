@@ -47,6 +47,13 @@
               </div>
               <div
                 draggable="true"
+                data-component-type="flow-container"
+                @dragstart="handleDragstart"
+              >
+                flow容器
+              </div>
+              <div
+                draggable="true"
                 data-component-type="banner"
                 @dragstart="handleDragstart"
               >
@@ -202,6 +209,16 @@ export default class App extends Vue {
             this.dragLayout.addSpirit({
               resizable: true,
               type: SpiritType.INLINE_CONTAINER,
+              height: 150,
+              left: offset.x,
+              top: offset.y
+            });
+            break;
+          }
+          case "flow-container": {
+            this.dragLayout.addSpirit({
+              resizable: true,
+              type: SpiritType.FLOW_CONTAINER,
               height: 150,
               left: offset.x,
               top: offset.y

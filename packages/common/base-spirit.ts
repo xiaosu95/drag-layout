@@ -125,6 +125,10 @@ export class BaseSpirit extends Base {
     };
   }
 
+  get copySpirit() {
+    return this.screen?.copySpirit;
+  }
+
   constructor(option: Partial<ISpiritParams> = {}, dragLayout: DragLayout) {
     super(dragLayout);
     this.config = {

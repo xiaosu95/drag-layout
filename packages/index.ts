@@ -11,6 +11,7 @@ import { InlineContainerSpirit } from "./spirit/inline-container-spirit";
 import { Coordinates } from "./utils/coordinates";
 import { MarkLine } from "./utils/markline";
 import { EditMode, SpiritType } from "./enums";
+import { FlowContainerSpirit } from "./spirit/flow-container-spirit";
 export class DragLayout {
   scrren: Screen;
   panel: Panel;
@@ -66,7 +67,8 @@ export class DragLayout {
     return this.spirits.filter(
       ele =>
         ele.type === SpiritType.FLEX_CONTAINER ||
-        ele.type === SpiritType.INLINE_CONTAINER
+        ele.type === SpiritType.INLINE_CONTAINER ||
+        ele.type === SpiritType.FLOW_CONTAINER
     ) as ContainerSpirit[];
   }
 
@@ -113,6 +115,9 @@ export class DragLayout {
         break;
       case SpiritType.INLINE_CONTAINER:
         s = new InlineContainerSpirit(option, this);
+        break;
+      case SpiritType.FLOW_CONTAINER:
+        s = new FlowContainerSpirit(option, this);
         break;
       default:
         s = new BaseSpirit(option, this);
