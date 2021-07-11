@@ -18,7 +18,7 @@ export class FlexContainerSpirit extends ContainerSpirit {
 
   syncChildrenStyle() {
     if (this.children) {
-      this.children.forEach((ele, idx) => {
+      this.sortChildren.forEach((ele, idx) => {
         const {
           config: { left, top, height }
         } = this;

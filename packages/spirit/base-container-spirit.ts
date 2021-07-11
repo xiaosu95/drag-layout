@@ -3,11 +3,14 @@ import { IOuputConfig, ISpiritParams } from "@/types/config";
 import { DragLayout } from "..";
 
 export class ContainerSpirit extends BaseSpirit {
-  children: BaseSpirit[] = [];
+  _children: BaseSpirit[] = [];
   auxiliaryDragEl = document.createElement("div");
   lockBtn = document.createElement("div");
   lock = true;
 
+  get children() {
+    return this.isScrrenBaseContainer ? this.relativeSpirits : this._children;
+  }
   get ouputConfig(): IOuputConfig {
     return {
       ...super.ouputConfig,
@@ -15,12 +18,33 @@ export class ContainerSpirit extends BaseSpirit {
     };
   }
 
+  get isScrrenBaseContainer() {
+    return this.config.isScrrenBaseContainer;
+  }
+
+  // 是否有选中的子容器
+  get hasActiveChild() {
+    return this.children.find(ele => ele.active);
+  }
+
+  // 优先active容器排序的子容器
+  get sortChildren() {
+    return this.children.sort(
+      (a, b) =>
+        Number(b.active || !!(b as ContainerSpirit).hasActiveChild) -
+        Number(a.active || !!(a as ContainerSpirit).hasActiveChild)
+    );
+  }
+
   constructor(option: Partial<ISpiritParams> = {}, dragLayout: DragLayout) {
     super(option, dragLayout);
-    console.log(option, this);
     this.el.classList.add("container_spirit");
-    this.el.classList.add("lock");
-    this.initLockBtn();
+    if (!this.isScrrenBaseContainer) {
+      this.el.classList.add("lock");
+      this.initLockBtn();
+    } else {
+      this.el.classList.add("scrren_base_container");
+    }
   }
 
   handleMousedown(event: MouseEvent) {
@@ -36,6 +60,23 @@ export class ContainerSpirit extends BaseSpirit {
     this.lockBtn.onclick = () => {
       this.setLock(!this.lock);
     };
+  }
+
+  // 获取idx之前的最大bottomPosition
+  getchildrenMaxBottom(idx) {
+    if (this.isScrrenBaseContainer)
+      return Math.max(
+        this.globalConfig.firstScreenHeight,
+        ...this.children
+          .filter((_ele, _idx) => _idx <= idx)
+          .map(ele => ele.bottomPosition)
+      );
+    if (idx === -1 || !this.children.length) return this.config.top;
+    return Math.max(
+      ...this.children
+        .filter((_ele, _idx) => _idx <= idx)
+        .map(ele => ele.bottomPosition)
+    );
   }
 
   updateStyle() {
@@ -62,18 +103,25 @@ export class ContainerSpirit extends BaseSpirit {
     const w =
       Math.abs(this.centerLineX - left) < this.clientWidth / 2 - 10 &&
       Math.abs(this.centerLineY - top) < this.clientHeight / 2 - 10;
-    if (activeSpirit.parentSpirit !== this) {
-      if (w) {
+    if (w) {
+      // 可以insert到该容器内
+      if (activeSpirit.parentSpirit !== this) {
         activeSpirit.removeParentSpirit();
         activeSpirit.addParentSpirit(this);
         activeSpirit.config.top = top;
         activeSpirit.config.left = left;
-        return true;
       }
-      return false;
     } else {
-      return w;
+      // 是否移出容器外
+      const isOut =
+        Math.abs(this.centerLineX - left) > this.clientWidth / 2 + 20 ||
+        Math.abs(this.centerLineY - top) > this.clientHeight / 2 + 20;
+      if (isOut) {
+        activeSpirit.removeParentSpirit();
+        return false;
+      }
     }
+    return true;
   }
 
   checkNewSort() {

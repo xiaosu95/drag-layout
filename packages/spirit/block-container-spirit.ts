@@ -4,11 +4,11 @@ import { ISpiritParams } from "@/types/config";
 import { DragLayout } from "..";
 import { ContainerSpirit } from "./base-container-spirit";
 
-export class FlowContainerSpirit extends ContainerSpirit {
-  type: SpiritType = SpiritType.FLOW_CONTAINER;
+export class BlockContainerSpirit extends ContainerSpirit {
+  type: SpiritType = SpiritType.BLOCK_CONTAINER;
   constructor(option: Partial<ISpiritParams> = {}, dragLayout: DragLayout) {
     super(option, dragLayout);
-    this.el.classList.add("flow_spirit");
+    this.el.classList.add("block_spirit");
   }
 
   updateStyle() {
@@ -17,24 +17,15 @@ export class FlowContainerSpirit extends ContainerSpirit {
   }
 
   calculateSpiritStyle(spirit: Spirit) {
-    const {
-      config: { left },
-      clientWidth: width
-    } = spirit;
     const top =
       (spirit.active && this.copySpirit?.config.top) || spirit.config.top;
     const _c = this.children
       .filter(item => {
         const {
-          config: { left: _left, top: _top },
-          clientWidth: _width
+          config: { top: _top }
         } = item;
         return (
-          spirit !== item && // 排除自己
-          top >= _top && // y轴目标top处于其它容器top之上
-          // 容器x轴投影相交判断
-          Math.abs(Math.abs(left + width / 2) - Math.abs(_left + _width / 2)) <
-            (width + _width) / 2
+          spirit !== item && top >= _top // 排除自己, y轴目标top处于其它容器top之下
         );
       })
       .sort((a, b) => b.bottomPosition - a.bottomPosition);
@@ -43,6 +34,7 @@ export class FlowContainerSpirit extends ContainerSpirit {
 
   syncChildrenStyle() {
     if (this.children) {
+      console.log(this.sortChildren);
       this.sortChildren.forEach(ele => {
         this.calculateSpiritStyle(ele);
         // 限制子容器宽度

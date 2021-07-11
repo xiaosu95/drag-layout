@@ -82,6 +82,13 @@
 .container_spirit {
   overflow: visible;
   box-shadow: rgba(0, 0, 0, 0.2) 2px 0px 10px;
+  &.scrren_base_container {
+    z-index: -1;
+    box-shadow: none;
+    &:hover {
+      outline: none;
+    }
+  }
   &.lock {
     z-index: 30;
   }

@@ -227,7 +227,7 @@ export class BaseSpirit extends Base {
         // TODO: 增加left，性能暂未测试，待定
         this.config.left = Math.max(Math.min(l, maxL), 0);
         this.screen.copySpirit.updateStyle();
-        this.screen.checkNewSort(this);
+        this.screen.checkNewSort();
         flag = false;
       };
       if (!flag) {
@@ -265,7 +265,7 @@ export class BaseSpirit extends Base {
   addParentSpirit(spirit: ContainerSpirit) {
     this.parentSpirit = spirit;
     this.subSort = spirit.children.length;
-    spirit.children.push(this);
+    spirit._children.push(this);
     this.dragLayout.updateAllStyle();
     this.setResizable(false);
   }

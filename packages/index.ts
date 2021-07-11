@@ -1,18 +1,21 @@
 import { IConfig, IParams, ISpiritParams, IOuputConfig } from "./types/config";
 import { Screen } from "./common/screen";
 import { BaseSpirit } from "./common/base-spirit";
-import { AbsoluteSpirit } from "./spirit/absolute-spirit";
-import { FixedSpirit } from "./spirit/fixed-spirit";
 import { Panel } from "./utils/panel";
 import "./less/index.less";
-import { FlexContainerSpirit } from "./spirit/flex-container-spirit";
 import { Spirit } from "./types";
-import { InlineContainerSpirit } from "./spirit/inline-container-spirit";
 import { Coordinates } from "./utils/coordinates";
 import { MarkLine } from "./utils/markline";
-import { EditMode, SpiritType } from "./enums";
-import { FlowContainerSpirit } from "./spirit/flow-container-spirit";
-import { ContainerSpirit } from "./spirit/base-container-spirit";
+import { ContainerType, EditMode, SpiritType } from "./enums";
+import {
+  AbsoluteSpirit,
+  BlockContainerSpirit,
+  ContainerSpirit,
+  FixedSpirit,
+  FlexContainerSpirit,
+  FlowContainerSpirit,
+  InlineContainerSpirit
+} from "./spirit";
 export class DragLayout {
   scrren: Screen;
   panel: Panel;
@@ -41,6 +44,7 @@ export class DragLayout {
       },
       this
     );
+    this.scrren.setBoxSpirit(); // 设置基础容器
     this.coordinates = new Coordinates(this);
     this.markLine = new MarkLine(this);
     this.updateAllStyle();
@@ -59,9 +63,9 @@ export class DragLayout {
   }
 
   get relativeSpirits() {
-    return this.spirits
-      .filter(ele => ele.config.position === "relative" && !ele.parentSpirit)
-      .sort((a, b) => a.sort - b.sort);
+    return this.spirits.filter(
+      ele => ele.config.position === "relative" && !ele.parentSpirit
+    );
   }
 
   get containerSpirits(): ContainerSpirit[] {
@@ -69,7 +73,8 @@ export class DragLayout {
       ele =>
         ele.type === SpiritType.FLEX_CONTAINER ||
         ele.type === SpiritType.INLINE_CONTAINER ||
-        ele.type === SpiritType.FLOW_CONTAINER
+        ele.type === SpiritType.FLOW_CONTAINER ||
+        ele.type === SpiritType.BLOCK_CONTAINER
     ) as ContainerSpirit[];
   }
 
@@ -91,13 +96,6 @@ export class DragLayout {
   }
 
   updateAllStyle() {
-    this.relativeSpirits.forEach((ele, idx) => {
-      if (ele.config.position === "relative") {
-        const prev = this.relativeSpirits[idx - 1];
-        ele.config.top = prev ? prev.bottomPosition : 0;
-      }
-      ele.updateStyle();
-    });
     this.scrren.updateStyle();
   }
 
@@ -119,31 +117,26 @@ export class DragLayout {
       case SpiritType.FLOW_CONTAINER:
         s = new FlowContainerSpirit(option, this);
         break;
+      case SpiritType.BLOCK_CONTAINER:
+        s = new BlockContainerSpirit(option, this);
+        break;
       default:
         s = new BaseSpirit(option, this);
         break;
     }
     if (s.config.position === "relative") {
-      const prevSpirit =
-        this.getSpirit(
-          { x: option.left, y: option.top },
-          this.relativeSpirits
-        ) || this.relativeSpirits[this.relativeSpirits.length - 1];
-      s.config.top = prevSpirit ? prevSpirit.bottomPosition : 0;
+      // const prevSpirit =
+      //   this.getSpirit(
+      //     { x: option.left, y: option.top },
+      //     this.relativeSpirits
+      //   ) || this.relativeSpirits[this.relativeSpirits.length - 1];
+      // s.config.top = prevSpirit ? prevSpirit.bottomPosition : 0;
       s.config.left = 0;
     }
+    this.activeSpirit = s;
     this.spirits.push(s);
-    this.calculateSort();
     this.updateAllStyle();
     return s;
-  }
-
-  calculateSort() {
-    const copyArr = [...this.relativeSpirits];
-    copyArr.sort((a, b) => a.config.top - b.config.top);
-    copyArr.forEach((ele, idx) => {
-      ele.sort = idx;
-    });
   }
 
   getSpirit(
@@ -193,5 +186,9 @@ export class DragLayout {
     list.forEach(ele => {
       this.addSpirit(ele);
     });
+  }
+  // 切换scrren模式
+  switchScrrenMode(type: ContainerType) {
+    this.scrren?.setBoxSpirit(type);
   }
 }

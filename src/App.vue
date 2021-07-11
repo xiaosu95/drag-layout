@@ -54,6 +54,13 @@
               </div>
               <div
                 draggable="true"
+                data-component-type="block-container"
+                @dragstart="handleDragstart"
+              >
+                block容器
+              </div>
+              <div
+                draggable="true"
                 data-component-type="banner"
                 @dragstart="handleDragstart"
               >
@@ -91,6 +98,7 @@
           </div>
           <el-divider content-position="left">其它操作</el-divider>
           <el-button @click="getInfo">获取配置</el-button>
+          <el-button @click="switchScrrenMode">切换scrren模式</el-button>
         </el-aside>
         <el-main>
           <el-card class="box-card">
@@ -110,7 +118,7 @@ import Calendar from "./components/test/calendar/index.vue";
 import TestTable from "./components/test/table/index.vue";
 import Backtop from "./components/test/backtop/index.vue";
 import Tabs from "./components/test/tabs/index.vue";
-import { SpiritType } from "@/enums";
+import { ContainerType, SpiritType } from "@/enums";
 @Component
 export default class App extends Vue {
   editMode = "default";
@@ -120,10 +128,10 @@ export default class App extends Vue {
     this.dragLayout = new DragLayout(this.$refs.boxEle as HTMLDivElement, {
       screenWidth: 375,
       handleResize(a, b) {
-        console.log("handleResize", a, b);
+        // console.log("handleResize", a, b);
       },
       handleMoved(a, b): void {
-        console.log("handleMoved", a, b);
+        // console.log("handleMoved", a, b);
       },
       handleDrop: (event, offset): void => {
         const type = event.dataTransfer.getData("type");
@@ -225,6 +233,16 @@ export default class App extends Vue {
             });
             break;
           }
+          case "block-container": {
+            this.dragLayout.addSpirit({
+              resizable: true,
+              type: SpiritType.BLOCK_CONTAINER,
+              height: 150,
+              left: offset.x,
+              top: offset.y
+            });
+            break;
+          }
           default:
             break;
         }
@@ -303,10 +321,30 @@ export default class App extends Vue {
   getInfo() {
     console.log(this.dragLayout.getInfo());
   }
+
+  switchScrrenMode() {
+    this.dragLayout.switchScrrenMode(ContainerType.FLOW_CONTAINER);
+  }
 }
 </script>
 
 <style lang="less">
+@media (-webkit-max-device-pixel-ratio: 1) {
+  /*美化滚动条*/
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #aaa;
+    background-clip: padding-box;
+    min-height: 28px;
+    border-radius: 4px;
+    &:hover {
+      background-color: #999;
+    }
+  }
+}
 body,
 html {
   height: 100%;

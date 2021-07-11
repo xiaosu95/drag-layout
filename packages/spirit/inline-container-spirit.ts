@@ -15,15 +15,6 @@ export class InlineContainerSpirit extends ContainerSpirit {
     this.syncChildrenStyle();
     super.updateStyle();
   }
-  // 获取idx之前的最大bottomPosition
-  getchildrenMaxBottom(idx) {
-    if (idx === -1 || !this.children.length) return this.config.top;
-    return Math.max(
-      ...this.children
-        .filter((_ele, _idx) => _idx <= idx)
-        .map(ele => ele.bottomPosition)
-    );
-  }
 
   calculateChildSort() {
     this.children.sort(
@@ -40,7 +31,7 @@ export class InlineContainerSpirit extends ContainerSpirit {
   syncChildrenStyle() {
     if (this.children) {
       let line = 0;
-      this.children.forEach((ele, idx) => {
+      this.sortChildren.forEach((ele, idx) => {
         const {
           config: { left, top }
         } = this;

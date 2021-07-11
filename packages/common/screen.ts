@@ -5,7 +5,13 @@ import { BaseSpirit } from "./base-spirit";
 import { $offset, getSpiritDom } from "@/utils/common";
 import { Base } from "./base";
 import { Spirit } from "@/types";
-import { EditMode, SpiritType } from "@/enums";
+import { ContainerType, EditMode, SpiritType } from "@/enums";
+import {
+  BlockContainerSpirit,
+  ContainerSpirit,
+  FlowContainerSpirit,
+  InlineContainerSpirit
+} from "@/spirit";
 
 export class Screen extends Base {
   maskEl = document.createElement("span");
@@ -16,6 +22,7 @@ export class Screen extends Base {
   };
   copySpirit: CopySpirit = undefined;
   wheelDeltaY = 0; // 滚动y值
+  boxSpirit: ContainerSpirit;
 
   get style() {
     const { left, top } = this.config;
@@ -44,9 +51,32 @@ export class Screen extends Base {
     this.config.boxEle.appendChild(this.el);
   }
 
+  // 设置基础容器
+  setBoxSpirit(type: ContainerType = ContainerType.BLOCK_CONTAINER) {
+    let ClassFunction: any = BlockContainerSpirit;
+    switch (type) {
+      case ContainerType.FLOW_CONTAINER:
+        ClassFunction = FlowContainerSpirit;
+        break;
+      case ContainerType.INLINE_CONTAINER:
+        ClassFunction = InlineContainerSpirit;
+        break;
+    }
+    this.boxSpirit = new ClassFunction(
+      {
+        top: 0,
+        isScrrenBaseContainer: true,
+        resizable: false
+      },
+      this.dragLayout
+    );
+    this.updateStyle();
+  }
+
   updateStyle() {
     this.el.setAttribute("style", this.style);
     this.coordinates && this.coordinates.updateStyle();
+    this.boxSpirit?.updateStyle();
   }
 
   initEvent() {
@@ -98,7 +128,7 @@ export class Screen extends Base {
     }
   }
 
-  checkNewSort(target: BaseSpirit) {
+  checkNewSort() {
     if (this.copySpirit) {
       // 处理容器
       if (this.activeSpirit.type === SpiritType.DEFAULT) {
@@ -114,38 +144,7 @@ export class Screen extends Base {
           }
         }
       }
-      // 处理非容器
-      const s = this.relativeSpirits.find(ele => {
-        const offset = ele.config.top - this.copySpirit.config.top;
-        return (
-          ele !== target && offset > 0 && offset < this.globalConfig.threshold
-        );
-      });
-      if (s) {
-        // if (
-        //   s.type === SpiritType.DEFAULT ||
-        //   s.type === SpiritType.FLEX_CONTAINER ||
-        //   s.type === SpiritType.INLINE_CONTAINER ||
-        //   s.type === SpiritType.FLOW_CONTAINER
-        // ) {
-        // }
-        target.removeParentSpirit();
-        target.sort = s.sort - 0.5;
-      } else {
-        const lastSpirit = this.relativeSpirits[
-          this.relativeSpirits.length - 1
-        ];
-        if (
-          lastSpirit !== target &&
-          Math.abs(lastSpirit.bottomPosition - this.copySpirit.config.top) <
-            this.globalConfig.threshold
-        ) {
-          target.removeParentSpirit();
-          target.sort = lastSpirit.sort + 0.5;
-        }
-      }
-      this.dragLayout.updateAllStyle();
-      this.dragLayout.calculateSort();
+      this.boxSpirit.updateStyle();
     }
   }
 

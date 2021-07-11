@@ -36,6 +36,7 @@ export interface ISpiritParams {
   handleResize: (ouput: IOuputConfig) => void;
   ext: any;
   children?: ISpiritParams[];
+  isScrrenBaseContainer?: boolean; // 是否为屏幕基础容器
 }
 
 export interface ISpiritConfig extends ISpiritParams {
