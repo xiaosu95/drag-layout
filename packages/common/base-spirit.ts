@@ -1,5 +1,5 @@
 import { SpiritType } from "@/enums";
-import { ContainerSpirit } from "@/spirit/flex-container-spirit";
+import { ContainerSpirit } from "@/spirit/base-container-spirit";
 import { IOuputConfig, ISpiritConfig, ISpiritParams } from "@/types/config";
 import { DragLayout } from "../index";
 import { Base } from "./base";

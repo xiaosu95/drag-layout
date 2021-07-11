@@ -2,7 +2,7 @@ import { SpiritType } from "@/enums";
 import { Spirit } from "@/types";
 import { ISpiritParams } from "@/types/config";
 import { DragLayout } from "..";
-import { ContainerSpirit } from "./flex-container-spirit";
+import { ContainerSpirit } from "./base-container-spirit";
 
 export class FlowContainerSpirit extends ContainerSpirit {
   type: SpiritType = SpiritType.FLOW_CONTAINER;
@@ -31,9 +31,11 @@ export class FlowContainerSpirit extends ContainerSpirit {
 
   calculateSpiritStyle(spirit: Spirit) {
     const {
-      config: { left, top },
+      config: { left },
       clientWidth: width
-    } = (spirit.active && this.copySpirit) || spirit;
+    } = spirit;
+    const top =
+      (spirit.active && this.copySpirit?.config.top) || spirit.config.top;
     const _c = this.children
       .filter(item => {
         const {
@@ -68,31 +70,6 @@ export class FlowContainerSpirit extends ContainerSpirit {
       this.config.height =
         this.getchildrenMaxBottom(this.children.length) - this.config.top ||
         100;
-    }
-  }
-
-  checkCanInsert() {
-    if (this.lock) return false;
-    const { copySpirit } = this.screen;
-    const {
-      config: { left, top }
-    } = copySpirit;
-    const { activeSpirit } = this.dragLayout;
-    if (this.uid === copySpirit.copyUid) return;
-    const w =
-      Math.abs(this.centerLineX - left) < this.clientWidth / 2 - 10 &&
-      Math.abs(this.centerLineY - top) < this.clientHeight / 2 - 10;
-    if (activeSpirit.parentSpirit !== this) {
-      if (w) {
-        activeSpirit.removeParentSpirit();
-        activeSpirit.addParentSpirit(this);
-        activeSpirit.config.left = left;
-        activeSpirit.config.top = top;
-        return true;
-      }
-      return false;
-    } else {
-      return w;
     }
   }
 

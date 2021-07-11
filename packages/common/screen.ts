@@ -122,14 +122,15 @@ export class Screen extends Base {
         );
       });
       if (s) {
-        if (
-          s.type === SpiritType.DEFAULT ||
-          s.type === SpiritType.FLEX_CONTAINER ||
-          s.type === SpiritType.INLINE_CONTAINER
-        ) {
-          target.removeParentSpirit();
-          target.sort = s.sort - 0.5;
-        }
+        // if (
+        //   s.type === SpiritType.DEFAULT ||
+        //   s.type === SpiritType.FLEX_CONTAINER ||
+        //   s.type === SpiritType.INLINE_CONTAINER ||
+        //   s.type === SpiritType.FLOW_CONTAINER
+        // ) {
+        // }
+        target.removeParentSpirit();
+        target.sort = s.sort - 0.5;
       } else {
         const lastSpirit = this.relativeSpirits[
           this.relativeSpirits.length - 1

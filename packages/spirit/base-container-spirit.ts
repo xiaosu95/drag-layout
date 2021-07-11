@@ -17,22 +17,14 @@ export class ContainerSpirit extends BaseSpirit {
 
   constructor(option: Partial<ISpiritParams> = {}, dragLayout: DragLayout) {
     super(option, dragLayout);
+    console.log(option, this);
     this.el.classList.add("container_spirit");
     this.el.classList.add("lock");
-    // this.initAuxiliaryDrag();
     this.initLockBtn();
   }
 
   handleMousedown(event: MouseEvent) {
     super.handleMousedown(event);
-  }
-
-  initAuxiliaryDrag() {
-    this.auxiliaryDragEl.className = "drag_layout_auxiliary_drag";
-    this.auxiliaryDragEl.innerHTML = `
-      <span></span>
-    `;
-    this.el.appendChild(this.auxiliaryDragEl);
   }
 
   initLockBtn() {
@@ -47,7 +39,7 @@ export class ContainerSpirit extends BaseSpirit {
   }
 
   updateStyle() {
-    //
+    super.updateStyle();
   }
 
   syncChildrenStyle() {
@@ -58,6 +50,7 @@ export class ContainerSpirit extends BaseSpirit {
     //
   }
 
+  // 检测是否可以插入父容器
   checkCanInsert() {
     if (this.lock) return false;
     const { copySpirit } = this.screen;
@@ -73,6 +66,8 @@ export class ContainerSpirit extends BaseSpirit {
       if (w) {
         activeSpirit.removeParentSpirit();
         activeSpirit.addParentSpirit(this);
+        activeSpirit.config.top = top;
+        activeSpirit.config.left = left;
         return true;
       }
       return false;
