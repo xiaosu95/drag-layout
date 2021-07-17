@@ -5,7 +5,7 @@ import { BaseSpirit } from "./base-spirit";
 import { $offset, getSpiritDom } from "@/utils/common";
 import { Base } from "./base";
 import { Spirit } from "@/types";
-import { ContainerType, EditMode, SpiritType } from "@/enums";
+import { ScrrenType, EditMode, SpiritType } from "@/enums";
 import {
   BlockContainerSpirit,
   ContainerSpirit,
@@ -52,19 +52,18 @@ export class Screen extends Base {
   }
 
   // 设置基础容器
-  setBoxSpirit(type: ContainerType = ContainerType.BLOCK_CONTAINER) {
+  setBoxSpirit(type: ScrrenType = this.globalConfig.scrrenType) {
     let ClassFunction: any = BlockContainerSpirit;
     switch (type) {
-      case ContainerType.FLOW_CONTAINER:
+      case ScrrenType.FLOW_CONTAINER:
         ClassFunction = FlowContainerSpirit;
         break;
-      case ContainerType.INLINE_CONTAINER:
-        ClassFunction = InlineContainerSpirit;
-        break;
     }
+    if (this.boxSpirit) this.boxSpirit.destroy();
     this.boxSpirit = new ClassFunction(
       {
         top: 0,
+        left: 0,
         isScrrenBaseContainer: true,
         resizable: false
       },

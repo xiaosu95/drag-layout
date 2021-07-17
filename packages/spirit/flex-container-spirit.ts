@@ -12,13 +12,12 @@ export class FlexContainerSpirit extends ContainerSpirit {
 
   updateStyle() {
     super.updateStyle();
-    this.children && this.children.sort((a, b) => a.subSort - b.subSort);
     this.syncChildrenStyle();
   }
 
   syncChildrenStyle() {
     if (this.children) {
-      this.sortChildren.forEach((ele, idx) => {
+      this.children.forEach((ele, idx) => {
         const {
           config: { left, top, height }
         } = this;
@@ -33,10 +32,12 @@ export class FlexContainerSpirit extends ContainerSpirit {
   }
 
   calculateChildSort() {
-    this.children.sort((a, b) => a.config.left - b.config.left);
-    this.children.forEach((ele, idx) => {
-      ele.subSort = idx;
-    });
+    if (this._children) {
+      this._children.sort((a, b) => a.config.left - b.config.left);
+      this.children.forEach((ele, idx) => {
+        ele.subSort = idx;
+      });
+    }
   }
 
   checkNewSort() {
@@ -44,28 +45,16 @@ export class FlexContainerSpirit extends ContainerSpirit {
       scrren: { copySpirit },
       activeSpirit
     } = this.dragLayout;
+    this.calculateChildSort();
     const s = this.children.find(ele => {
-      const offset = Math.abs(ele.config.left - copySpirit.config.left);
-      return (
-        ele !== activeSpirit &&
-        offset < this.globalConfig.threshold &&
-        copySpirit.config.top > ele.config.top &&
-        copySpirit.config.top < ele.bottomPosition
-      );
+      return ele !== activeSpirit && ele.config.left > copySpirit.config.left;
     });
     if (s) {
       activeSpirit.subSort = s.subSort - 0.5;
     } else {
-      const lastSpirit = this.children[this.children.length - 1];
-      if (
-        lastSpirit !== activeSpirit &&
-        Math.abs(lastSpirit.rightPosition - copySpirit.config.left) <
-          this.globalConfig.threshold
-      ) {
-        activeSpirit.subSort = lastSpirit.subSort + 0.5;
-      }
+      activeSpirit.subSort = Infinity;
     }
+    this._children.sort((a, b) => a.subSort - b.subSort);
     this.updateStyle();
-    this.calculateChildSort();
   }
 }

@@ -3,9 +3,8 @@
  * @export
  * @enum {number}
  */
-export enum ContainerType {
-  INLINE_CONTAINER = 4,
-  FLOW_CONTAINER,
+export enum ScrrenType {
+  FLOW_CONTAINER = 5,
   BLOCK_CONTAINER
 }
 

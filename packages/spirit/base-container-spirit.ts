@@ -113,11 +113,15 @@ export class ContainerSpirit extends BaseSpirit {
       }
     } else {
       // 是否移出容器外
-      const isOut =
-        Math.abs(this.centerLineX - left) > this.clientWidth / 2 + 20 ||
-        Math.abs(this.centerLineY - top) > this.clientHeight / 2 + 20;
-      if (isOut) {
-        activeSpirit.removeParentSpirit();
+      if (activeSpirit.parentSpirit === this) {
+        const isOut =
+          // Math.abs(this.centerLineX - left) > this.clientWidth / 2 + 20 ||
+          Math.abs(this.centerLineY - top) > this.clientHeight / 2 + 20;
+        if (isOut) {
+          activeSpirit.removeParentSpirit();
+          return false;
+        }
+      } else {
         return false;
       }
     }
@@ -125,7 +129,8 @@ export class ContainerSpirit extends BaseSpirit {
   }
 
   checkNewSort() {
-    //
+    // TODO: 需做性能优化
+    this.screen.updateStyle();
   }
 
   setLock(bool: boolean) {

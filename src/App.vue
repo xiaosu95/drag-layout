@@ -28,9 +28,9 @@
             >
             </el-switch>
           </div>
-          <el-divider content-position="left">组件库</el-divider>
-          <div class="components_box">
-            <div class="components">
+          <el-divider content-position="left">容器库</el-divider>
+          <div class="containers_box">
+            <div class="containers">
               <div
                 draggable="true"
                 data-component-type="flex-container"
@@ -59,6 +59,11 @@
               >
                 block容器
               </div>
+            </div>
+          </div>
+          <el-divider content-position="left">组件库</el-divider>
+          <div class="components_box">
+            <div class="components">
               <div
                 draggable="true"
                 data-component-type="banner"
@@ -97,8 +102,18 @@
             </div>
           </div>
           <el-divider content-position="left">其它操作</el-divider>
-          <el-button @click="getInfo">获取配置</el-button>
-          <el-button @click="switchScrrenMode">切换scrren模式</el-button>
+          <el-button @click="getInfo" size="mini">获取配置</el-button>
+          <el-divider content-position="left">屏幕模式</el-divider>
+          <div>
+            <el-radio-group
+              v-model="scrrenType"
+              size="mini"
+              @change="switchScrrenMode"
+            >
+              <el-radio-button label="5">FLOW</el-radio-button>
+              <el-radio-button label="6">BLOCK</el-radio-button>
+            </el-radio-group>
+          </div>
         </el-aside>
         <el-main>
           <el-card class="box-card">
@@ -118,21 +133,22 @@ import Calendar from "./components/test/calendar/index.vue";
 import TestTable from "./components/test/table/index.vue";
 import Backtop from "./components/test/backtop/index.vue";
 import Tabs from "./components/test/tabs/index.vue";
-import { ContainerType, SpiritType } from "@/enums";
+import { ScrrenType, SpiritType } from "@/enums";
 @Component
 export default class App extends Vue {
   editMode = "default";
   adsorption = true;
   dragLayout: DragLayout;
+  scrrenType = ScrrenType.BLOCK_CONTAINER;
   mounted() {
     this.dragLayout = new DragLayout(this.$refs.boxEle as HTMLDivElement, {
       screenWidth: 375,
-      handleResize(a, b) {
-        // console.log("handleResize", a, b);
-      },
-      handleMoved(a, b): void {
-        // console.log("handleMoved", a, b);
-      },
+      // handleResize(a, b) {
+      //   // console.log("handleResize", a, b);
+      // },
+      // handleMoved(a, b): void {
+      //   // console.log("handleMoved", a, b);
+      // },
       handleDrop: (event, offset): void => {
         const type = event.dataTransfer.getData("type");
         switch (type) {
@@ -143,7 +159,8 @@ export default class App extends Vue {
             this.dragLayout.addSpirit({
               left: offset.x,
               top: offset.y,
-              height: 300,
+              height: 200,
+              width: 100,
               render: $banner.$el
             });
             break;
@@ -322,8 +339,8 @@ export default class App extends Vue {
     console.log(this.dragLayout.getInfo());
   }
 
-  switchScrrenMode() {
-    this.dragLayout.switchScrrenMode(ContainerType.FLOW_CONTAINER);
+  switchScrrenMode(val: any) {
+    this.dragLayout.switchScrrenMode(Number(val));
   }
 }
 </script>
@@ -363,14 +380,20 @@ li {
 .screen_box {
   height: 100%;
 }
-.components_box {
-  height: calc(100% - 300px);
+.containers_box {
+  height: 220px;
   overflow: auto;
 }
-.components {
+.components_box {
+  height: calc(100% - 520px);
+  overflow: auto;
+}
+.components,
+.containers {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
+  height: 100%;
   div {
     width: 120px;
     height: 100px;

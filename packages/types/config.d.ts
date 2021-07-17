@@ -1,4 +1,4 @@
-import { EditMode, SpiritType } from "@/enums";
+import { ScrrenType, EditMode, SpiritType } from "@/enums";
 import { Spirit } from ".";
 
 export interface IBaseData {
@@ -74,4 +74,5 @@ export interface IParams {
 
 export interface IConfig extends IParams {
   editMode: EditMode;
+  scrrenType: ScrrenType;
 }

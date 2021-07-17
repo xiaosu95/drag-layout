@@ -60,6 +60,7 @@ export class FlowContainerSpirit extends ContainerSpirit {
 
   checkNewSort() {
     this.updateStyle();
+    super.checkNewSort();
   }
   setLock(bool: boolean) {
     super.setLock(bool);

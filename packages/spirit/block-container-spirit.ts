@@ -34,7 +34,6 @@ export class BlockContainerSpirit extends ContainerSpirit {
 
   syncChildrenStyle() {
     if (this.children) {
-      console.log(this.sortChildren);
       this.sortChildren.forEach(ele => {
         this.calculateSpiritStyle(ele);
         // 限制子容器宽度
@@ -52,6 +51,7 @@ export class BlockContainerSpirit extends ContainerSpirit {
 
   checkNewSort() {
     this.updateStyle();
+    super.checkNewSort();
   }
   setLock(bool: boolean) {
     super.setLock(bool);

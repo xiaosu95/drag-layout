@@ -267,7 +267,9 @@ export class BaseSpirit extends Base {
     this.subSort = spirit.children.length;
     spirit._children.push(this);
     this.dragLayout.updateAllStyle();
-    this.setResizable(false);
+    if (spirit.type === SpiritType.FLEX_CONTAINER) {
+      this.setResizable(false);
+    }
   }
 
   setResizable(bool: boolean) {

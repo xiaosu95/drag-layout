@@ -6,7 +6,7 @@ import "./less/index.less";
 import { Spirit } from "./types";
 import { Coordinates } from "./utils/coordinates";
 import { MarkLine } from "./utils/markline";
-import { ContainerType, EditMode, SpiritType } from "./enums";
+import { ScrrenType, EditMode, SpiritType } from "./enums";
 import {
   AbsoluteSpirit,
   BlockContainerSpirit,
@@ -29,6 +29,7 @@ export class DragLayout {
     editMode: EditMode.DEFAULT,
     firstScreenHeight: 700,
     screenWidth: 375,
+    scrrenType: ScrrenType.BLOCK_CONTAINER,
     handleDrop: () => null
   };
   private _activeSpirit: Spirit;
@@ -188,7 +189,8 @@ export class DragLayout {
     });
   }
   // 切换scrren模式
-  switchScrrenMode(type: ContainerType) {
+  switchScrrenMode(type: ScrrenType) {
     this.scrren?.setBoxSpirit(type);
+    this.config.scrrenType = type;
   }
 }

@@ -17,7 +17,7 @@ export class InlineContainerSpirit extends ContainerSpirit {
   }
 
   calculateChildSort() {
-    this.children.sort(
+    this._children.sort(
       (a, b) =>
         a.line * this.clientWidth +
         a.config.left -
@@ -31,7 +31,7 @@ export class InlineContainerSpirit extends ContainerSpirit {
   syncChildrenStyle() {
     if (this.children) {
       let line = 0;
-      this.sortChildren.forEach((ele, idx) => {
+      this.children.forEach((ele, idx) => {
         const {
           config: { left, top }
         } = this;
@@ -63,6 +63,39 @@ export class InlineContainerSpirit extends ContainerSpirit {
         this.getchildrenMaxBottom(this.children.length) - this.config.top ||
         100;
     }
+  }
+  checkNewSort() {
+    const {
+      scrren: { copySpirit },
+      activeSpirit
+    } = this.dragLayout;
+    this.calculateChildSort();
+    const s = this.children.find(ele => {
+      return (
+        ele !== activeSpirit &&
+        ele.config.left > copySpirit.config.left &&
+        copySpirit.config.top > ele.config.top &&
+        copySpirit.config.top <
+          ele.bottomPosition -
+            (ele.clientHeight > 50 ? 50 : ele.clientHeight / 2)
+      );
+    });
+    if (s) {
+      activeSpirit.subSort = s.subSort - 0.5;
+      console.log(activeSpirit.subSort);
+    } else {
+      const lastSpirit = this.children[this.children.length - 1];
+      if (
+        lastSpirit !== activeSpirit &&
+        Math.abs(lastSpirit.rightPosition - copySpirit.config.left) <
+          this.globalConfig.threshold
+      ) {
+        activeSpirit.subSort = lastSpirit.subSort + 0.5;
+      }
+    }
+    this._children.sort((a, b) => a.subSort - b.subSort);
+    this.updateStyle();
+    super.checkNewSort();
   }
   setLock(bool: boolean) {
     super.setLock(bool);
