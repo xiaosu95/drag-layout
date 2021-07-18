@@ -72,9 +72,9 @@ export class Screen extends Base {
   }
 
   updateStyle() {
-    this.el.setAttribute("style", this.style);
     this.coordinates && this.coordinates.updateStyle();
     this.boxSpirit?.updateStyle();
+    this.el.setAttribute("style", this.style);
   }
 
   initEvent() {
