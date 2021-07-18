@@ -19,7 +19,8 @@ export class FlowContainerSpirit extends ContainerSpirit {
   calculateSpiritStyle(spirit: Spirit) {
     const {
       config: { left },
-      clientWidth: width
+      clientWidth: width,
+      offsetX
     } = spirit;
     const top =
       (spirit.active && this.copySpirit?.config.top) || spirit.config.top;
@@ -39,10 +40,17 @@ export class FlowContainerSpirit extends ContainerSpirit {
       })
       .sort((a, b) => b.bottomPosition - a.bottomPosition);
     spirit.config.top = _c[0]?.bottomPosition || this.config.top;
+    spirit.config.left = this.config.left + offsetX;
   }
 
   syncChildrenStyle() {
     if (this.children) {
+      // 父容器最小宽度
+      const minW = this.getchildrenMaxRight() - this.config.left;
+      if (this.clientWidth <= minW) {
+        this.config.width = minW;
+      }
+      // --end
       this.sortChildren.forEach(ele => {
         this.calculateSpiritStyle(ele);
         // 限制子容器宽度
@@ -52,9 +60,10 @@ export class FlowContainerSpirit extends ContainerSpirit {
         }
         ele.updateStyle();
       });
+      // 父容器高度
       this.config.height =
         this.getchildrenMaxBottom(this.children.length) - this.config.top ||
-        100;
+        this.config.height;
     }
   }
 

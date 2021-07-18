@@ -78,6 +78,10 @@ export class ContainerSpirit extends BaseSpirit {
         .map(ele => ele.bottomPosition)
     );
   }
+  // 获取子容器最大right
+  getchildrenMaxRight() {
+    return Math.max(...this.children.map(ele => ele.rightPosition));
+  }
 
   updateStyle() {
     super.updateStyle();

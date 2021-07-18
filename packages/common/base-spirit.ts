@@ -27,6 +27,7 @@ export class BaseSpirit extends Base {
   resizableEl = document.createElement("div");
   private _parentSpirit: ContainerSpirit;
   line = 0;
+  offsetX = 0; // 相对父容器的x轴偏移
 
   get parentSpirit() {
     return this._parentSpirit;
@@ -51,11 +52,11 @@ export class BaseSpirit extends Base {
   }
 
   get bottomPosition() {
-    return this.config.top + this.el.clientHeight;
+    return this.config.top + this.clientHeight;
   }
 
   get rightPosition() {
-    return this.config.left + this.el.clientWidth;
+    return this.config.left + this.clientWidth;
   }
 
   get centerLineX() {
@@ -221,11 +222,14 @@ export class BaseSpirit extends Base {
       const func = () => {
         const l = ev.clientX - disX;
         const t = ev.clientY - disY + this.panel.wheelDeltaY;
-        const maxL = this.parentWidth - this.clientWidth;
+        const parentL = this.parentSpirit?.config.left || 0;
+        const maxL = this.parentWidth - this.clientWidth + parentL;
         this.screen.copySpirit.config.top = t;
         this.screen.copySpirit.config.left = l;
         // TODO: 增加left，性能暂未测试，待定
         this.config.left = Math.max(Math.min(l, maxL), 0);
+        this.offsetX = this.config.left - parentL;
+        this.offsetX < 0 && (this.offsetX = 0);
         this.screen.copySpirit.updateStyle();
         this.screen.checkNewSort();
         flag = false;

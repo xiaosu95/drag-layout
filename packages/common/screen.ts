@@ -9,8 +9,7 @@ import { ScrrenType, EditMode, SpiritType } from "@/enums";
 import {
   BlockContainerSpirit,
   ContainerSpirit,
-  FlowContainerSpirit,
-  InlineContainerSpirit
+  FlowContainerSpirit
 } from "@/spirit";
 
 export class Screen extends Base {
