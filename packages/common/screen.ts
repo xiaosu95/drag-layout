@@ -1,16 +1,16 @@
-import { IScreenConfig } from "@/types/config";
-import { CopySpirit } from "@/spirit/copy-spirit";
+import { IScreenConfig } from "../types/config";
+import { CopySpirit } from "../spirit/copy-spirit";
 import { DragLayout } from "..";
 import { BaseSpirit } from "./base-spirit";
-import { $offset, getSpiritDom } from "@/utils/common";
+import { $offset, getSpiritDom } from "../utils/common";
 import { Base } from "./base";
-import { Spirit } from "@/types";
-import { ScrrenType, EditMode, SpiritType } from "@/enums";
+import { Spirit } from "../types";
+import { ScrrenType, EditMode, SpiritType } from "../enums";
 import {
   BlockContainerSpirit,
   ContainerSpirit,
   FlowContainerSpirit
-} from "@/spirit";
+} from "../spirit";
 
 export class Screen extends Base {
   maskEl = document.createElement("span");

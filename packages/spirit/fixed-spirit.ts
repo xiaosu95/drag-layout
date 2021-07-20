@@ -1,4 +1,4 @@
-import { ISpiritParams } from "@/types/config";
+import { ISpiritParams } from "../types/config";
 import { DragLayout } from "..";
 import { AbsoluteSpirit } from "./absolute-spirit";
 

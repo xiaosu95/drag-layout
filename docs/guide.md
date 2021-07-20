@@ -12,7 +12,7 @@ npm install -D drag-layout
 ```
 
 ```typescript
-import { DragLayout } from "drag-layout";
+import { DragLayout, ScrrenType } from "drag-layout";
 
 const boxEle = document.querySelector('.boxEle')
 const dragLayout = new DragLayout(boxEle, {
@@ -31,6 +31,7 @@ const dragLayout = new DragLayout(boxEle, {
     // 屏幕的原生ondrop事件监听
     // 可以通过该事件进行添加容器
   },
+  scrrenType: ScrrenType.BLOCK_CONTAINER,
 })
 ```
 ::: tip

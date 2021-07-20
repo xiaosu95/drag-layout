@@ -1,4 +1,4 @@
-import { ScrrenType, EditMode, SpiritType } from "@/enums";
+import { ScrrenType, EditMode, SpiritType } from "../enums";
 import { Spirit } from ".";
 
 export interface IBaseData {
@@ -70,9 +70,9 @@ export interface IParams {
   infoDataBridge?: (info: IOuputConfig) => any;
   handleResize?: (spirit: Spirit, ouput: IOuputConfig) => void;
   handleMoved?: (spirit: Spirit, ouput: IOuputConfig) => void;
+  scrrenType: ScrrenType;
 }
 
 export interface IConfig extends IParams {
   editMode: EditMode;
-  scrrenType: ScrrenType;
 }

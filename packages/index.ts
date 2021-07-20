@@ -16,7 +16,7 @@ import {
   FlowContainerSpirit,
   InlineContainerSpirit
 } from "./spirit";
-export class DragLayout {
+class DragLayout {
   scrren: Screen;
   panel: Panel;
   spirits: Spirit[] = [];
@@ -194,3 +194,5 @@ export class DragLayout {
     this.config.scrrenType = type;
   }
 }
+
+export { DragLayout, ScrrenType, EditMode, SpiritType };

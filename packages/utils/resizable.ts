@@ -1,4 +1,4 @@
-import { Base } from "@/common/base";
+import { Base } from "../common/base";
 import { DragLayout } from "..";
 
 export class Resizable extends Base {

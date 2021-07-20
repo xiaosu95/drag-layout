@@ -1,5 +1,5 @@
-import { SpiritType } from "@/enums";
-import { ISpiritParams } from "@/types/config";
+import { SpiritType } from "../enums";
+import { ISpiritParams } from "../types/config";
 import { DragLayout } from "..";
 import { ContainerSpirit } from "./base-container-spirit";
 
@@ -82,7 +82,6 @@ export class InlineContainerSpirit extends ContainerSpirit {
     });
     if (s) {
       activeSpirit.subSort = s.subSort - 0.5;
-      console.log(activeSpirit.subSort);
     } else {
       const lastSpirit = this.children[this.children.length - 1];
       if (

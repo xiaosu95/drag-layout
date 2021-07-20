@@ -1,6 +1,6 @@
-import { BaseSpirit } from "@/common/base-spirit";
-import { SpiritType } from "@/enums";
-import { ISpiritParams } from "@/types/config";
+import { BaseSpirit } from "../common/base-spirit";
+import { SpiritType } from "../enums";
+import { ISpiritParams } from "../types/config";
 import { DragLayout } from "..";
 
 export class AbsoluteSpirit extends BaseSpirit {

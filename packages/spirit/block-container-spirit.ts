@@ -1,6 +1,6 @@
-import { SpiritType } from "@/enums";
-import { Spirit } from "@/types";
-import { ISpiritParams } from "@/types/config";
+import { SpiritType } from "../enums";
+import { Spirit } from "../types";
+import { ISpiritParams } from "../types/config";
 import { DragLayout } from "..";
 import { ContainerSpirit } from "./base-container-spirit";
 

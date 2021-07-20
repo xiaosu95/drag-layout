@@ -17,6 +17,7 @@ const dragLayout = new DragLayout(Ele, option)
 - `handleResize`: 注册resize容器事件监听
 - `handleMoved`: 注册容器移动事件监听
 - `handleDrop`: 注册拖拽元素到屏幕时的事件监听，用于添加新容器
+- `scrrenType`: 屏幕基础容器模式，可以为`block`和`flow`两种
 ```typescript
 interface IOption {
   firstScreenHeight?: number;
@@ -31,6 +32,7 @@ interface IOption {
     x: number;
     y: number;
   }) => void;
+  scrrenType?:ScrrenType;
 }
 ```
 :::tip
@@ -137,6 +139,19 @@ dragLayout.getInfo()
 ```typescript
 draglayout.loadSpirits(list)
 ```
+
+### switchScrrenMode
+- 类型: (type: ScrrenType) => void
+- 详情:<br>
+  切换屏幕容器的布局模式，有flow和block两种模式，具体功能和对应容器一致
+- 示例:
+```typescript
+draglayout.switchScrrenMode(type)
+```
+:::tip
+用到的枚举: [ScrrenType](#scrrentype)
+:::
+
 :::tip
 [ISpiritParams声明](#ispiritparams)
 :::
@@ -203,6 +218,24 @@ enum SpiritType {
 import { EditMode } from 'drag-layout'
 ```
 
+### ScrrenType
+- 详情: 屏幕容器模式
+- 值:
+>- `FLOW_CONTAINER`: FLOW基础容器
+>- `BLOCK_CONTAINER`: BLOCK基础容器
+- 示例:
+```typescript
+// 定义
+enum ScrrenType {
+  FLOW_CONTAINER = 5,
+  BLOCK_CONTAINER = 6,
+}
+```
+```typescript
+// 使用
+import { ScrrenType } from 'drag-layout'
+```
+
 ### SpiritType
 - 详情: 容器类型枚举
 - 值:
@@ -210,6 +243,8 @@ import { EditMode } from 'drag-layout'
 > - `ABSOLUTE`: 基于整个页面的定位布局，可以自由拖拽，不会受到其它容器影响
 > - `FIXED`: 基于首屏定位，可以自由拖拽，不会受到其它容器影响
 > - `FLEX_CONTAINER`: 布局属于`DEFAULT`，可以包含其它`DEFAULT`容器的父级容器，容器内部的布局方式为flex模式，子容器会均分父容器宽度
+> - `BLOCK_CONTAINER`: 布局属于`DEFAULT`，可以包含其它`DEFAULT`容器的父级容器，容器内部的布局方式为block模式，每个子容器占用单行
+> - `FLOW_CONTAINER`: 布局属于`DEFAULT`，可以包含其它`DEFAULT`容器的父级容器，容器内部的布局方式为flex模式，子容器可以自由放置到父容器内，布局规则是自上而下
 > - `INLINE_CONTAINER`: 布局属于`DEFAULT`，可以包含其它`DEFAULT`容器的父级容器，容器内部的布局方式会把子容器变为inline-block的状态，由左向右自上而下排序
 - 示例:
 ```typescript
@@ -219,7 +254,9 @@ enum SpiritType {
   ABSOLUTE = 1,
   FIXED = 2,
   FLEX_CONTAINER = 3,
-  INLINE_CONTAINER = 4
+  INLINE_CONTAINER = 4,
+  FLOW_CONTAINER = 5,
+  BLOCK_CONTAINER = 6,
 }
 ```
 ```typescript

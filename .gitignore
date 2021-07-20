@@ -3,6 +3,7 @@ node_modules
 /dist
 docs/.vuepress/dist
 bin/
+/types
 
 # local env files
 .env.local

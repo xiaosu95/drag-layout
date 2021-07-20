@@ -1,5 +1,5 @@
-import { BaseSpirit } from "@/common/base-spirit";
-import { ISpiritParams } from "@/types/config";
+import { BaseSpirit } from "../common/base-spirit";
+import { ISpiritParams } from "../types/config";
 import { DragLayout } from "..";
 
 export class CopySpirit extends BaseSpirit {

@@ -1,4 +1,4 @@
-import { Base } from "@/common/base";
+import { Base } from "../common/base";
 import { DragLayout } from "../index";
 export class Panel extends Base {
   el = document.createElement("div");
