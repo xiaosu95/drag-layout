@@ -17,6 +17,26 @@ export class ContainerSpirit extends BaseSpirit {
       children: this.children.map(ele => ele.ouputConfig)
     };
   }
+  // 容器使用top、left做定位，只为了lock的层级可以高于子容器，后续可以换回去
+  get style() {
+    const offset = this.getPosition();
+    return `
+      width: ${this.clientWidth}px;
+      height: ${this.clientHeight}px;
+      top: ${offset.top}px;
+      left: ${offset.left}px;
+      `;
+  }
+  get active() {
+    return this._active;
+  }
+  set active(bool: boolean) {
+    this._active = bool;
+    this.el.setAttribute("data-active", String(bool));
+    this.children.forEach(ele => {
+      ele.el.setAttribute("data-parent-active", String(bool));
+    });
+  }
 
   get isScrrenBaseContainer() {
     return this.config.isScrrenBaseContainer;

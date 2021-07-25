@@ -1,6 +1,6 @@
 {
   "name": "drag-layout",
-  "version": "0.0.1",
+  "version": "0.1.2",
   "private": false,
   "main": "./dist/drag-layout.umd.js",
   "typings": "./types/index.d.ts",

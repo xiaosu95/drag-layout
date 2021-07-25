@@ -22,12 +22,11 @@ export class BaseSpirit extends Base {
     handleResize: undefined,
     ext: undefined
   };
-  background = "";
-  private _active = false;
+  _active = false;
   resizableEl = document.createElement("div");
   private _parentSpirit: ContainerSpirit;
   line = 0;
-  offsetX = 0; // 相对父容器的x轴偏移
+  offsetX = 0; // 相对父容器的y轴偏移
 
   get parentSpirit() {
     return this._parentSpirit;
@@ -73,7 +72,6 @@ export class BaseSpirit extends Base {
       width: ${this.clientWidth}px;
       height: ${this.clientHeight}px;
       transform: translate(${offset.left}px, ${offset.top}px);
-      background: ${this.background};
     `;
   }
 
@@ -140,9 +138,6 @@ export class BaseSpirit extends Base {
     this.updateStyle();
     this.el.className = "drag_spirit drag_default_spirit";
     this.el.setAttribute("data-uid", String(this.uid));
-    // this.background = `RGBA(${Math.floor(255 * Math.random())}, ${Math.floor(
-    //   255 * Math.random()
-    // )}, ${Math.floor(255 * Math.random())})`;
     this.initRender();
     this.screen.el.appendChild(this.el);
   }
@@ -178,7 +173,10 @@ export class BaseSpirit extends Base {
     const type = target.getAttribute("data-resizable");
     const disX = event.clientX - this.clientWidth;
     const disY = event.clientY - this.clientHeight;
-    const maxW = this.parentWidth - this.config.left;
+    const maxW =
+      this.parentWidth -
+      this.config.left +
+      (this.parentSpirit?.config.left || 0);
     const handleMousemove = (ev: MouseEvent) => {
       const clientX = ev.clientX;
       const clientY = ev.clientY;
@@ -261,12 +259,14 @@ export class BaseSpirit extends Base {
       }
       this.parentSpirit = undefined;
       this.config.left = 0;
+      this.offsetX = 0;
       this.dragLayout.updateAllStyle();
       this.setResizable(true);
     }
   }
 
   addParentSpirit(spirit: ContainerSpirit) {
+    this.offsetX = 0;
     this.parentSpirit = spirit;
     this.subSort = spirit.children.length;
     spirit._children.push(this);

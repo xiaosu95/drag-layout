@@ -45,21 +45,22 @@ export class FlowContainerSpirit extends ContainerSpirit {
 
   syncChildrenStyle() {
     if (this.children) {
+      this.sortChildren.forEach(ele => {
+        this.calculateSpiritStyle(ele);
+        // 限制子容器宽度
+        // const maxW = this.rightPosition - ele.config.left;
+        // console.log(this.rightPosition, ele.config.left, maxW);
+        // if (ele.config.width > maxW) {
+        //   ele.config.width = maxW;
+        // }
+        ele.updateStyle();
+      });
       // 父容器最小宽度
       const minW = this.getchildrenMaxRight() - this.config.left;
       if (this.clientWidth <= minW) {
         this.config.width = minW;
       }
       // --end
-      this.sortChildren.forEach(ele => {
-        this.calculateSpiritStyle(ele);
-        // 限制子容器宽度
-        const maxW = this.rightPosition - ele.config.left;
-        if (ele.config.width > maxW) {
-          ele.config.width = maxW;
-        }
-        ele.updateStyle();
-      });
       // 父容器高度
       this.config.height =
         this.getchildrenMaxBottom(this.children.length) - this.config.top ||

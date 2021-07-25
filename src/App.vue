@@ -142,7 +142,7 @@ export default class App extends Vue {
   scrrenType = ScrrenType.BLOCK_CONTAINER;
   mounted() {
     this.dragLayout = new DragLayout(this.$refs.boxEle as HTMLDivElement, {
-      screenWidth: 1280,
+      screenWidth: 750,
       // handleResize(a, b) {
       //   // console.log("handleResize", a, b);
       // },
