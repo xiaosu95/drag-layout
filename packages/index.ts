@@ -1,4 +1,10 @@
-import { IConfig, IParams, ISpiritParams, IOuputConfig } from "./types/config";
+import {
+  IConfig,
+  IParams,
+  ISpiritParams,
+  IOuputSpiritConfig,
+  IOuputConfig
+} from "./types/config";
 import { Screen } from "./common/screen";
 import { BaseSpirit } from "./common/base-spirit";
 import { Panel } from "./utils/panel";
@@ -175,13 +181,31 @@ class DragLayout {
     console.log(bool);
     this.config.adsorption = bool;
   }
-
-  getInfo<T = IOuputConfig>(): T[] {
-    return this.firstHierarchySpirits.map(ele => {
-      return this.config.infoDataBridge
-        ? this.config.infoDataBridge(ele.ouputConfig)
-        : ele.ouputConfig;
-    });
+  /** 获取配置 */
+  getInfo<T = IOuputSpiritConfig>(): IOuputConfig<T> {
+    const {
+      threshold,
+      adsorptionThreshold,
+      adsorption,
+      firstScreenHeight,
+      screenWidth,
+      scrrenType,
+      scale
+    } = this.config;
+    return {
+      threshold,
+      adsorptionThreshold,
+      adsorption,
+      firstScreenHeight,
+      screenWidth,
+      scrrenType,
+      scale,
+      spirits: this.firstHierarchySpirits.map(ele => {
+        return this.config.infoDataBridge
+          ? this.config.infoDataBridge(ele.ouputConfig)
+          : ele.ouputConfig;
+      })
+    };
   }
 
   loadSpirits(list: ISpiritParams[]) {

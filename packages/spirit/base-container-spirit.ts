@@ -1,5 +1,5 @@
 import { BaseSpirit } from "../common/base-spirit";
-import { IOuputConfig, ISpiritParams } from "../types/config";
+import { IOuputSpiritConfig, ISpiritParams } from "../types/config";
 import { DragLayout } from "..";
 
 export class ContainerSpirit extends BaseSpirit {
@@ -11,7 +11,7 @@ export class ContainerSpirit extends BaseSpirit {
   get children() {
     return this.isScrrenBaseContainer ? this.relativeSpirits : this._children;
   }
-  get ouputConfig(): IOuputConfig {
+  get ouputConfig(): IOuputSpiritConfig {
     return {
       ...super.ouputConfig,
       children: this.children.map(ele => ele.ouputConfig)

@@ -18,6 +18,7 @@ const dragLayout = new DragLayout(Ele, option)
 - `handleMoved`: 注册容器移动事件监听
 - `handleDrop`: 注册拖拽元素到屏幕时的事件监听，用于添加新容器
 - `scrrenType`: 屏幕基础容器模式，可以为`block`和`flow`两种
+- `scale`: 屏幕缩放比例
 ```typescript
 interface IOption {
   firstScreenHeight?: number;
@@ -25,14 +26,15 @@ interface IOption {
   adsorption?: boolean;
   adsorptionThreshold?: number;
   screenWidth: number;
-  infoDataBridge?: (ouputConfig: IOuputConfig) => any;
-  handleResize?: (spirit: Spirit, ouputConfig: IOuputConfig) => void;
-  handleMoved?: (spirit: Spirit, ouputConfig: IOuputConfig) => void;
+  infoDataBridge?: (ouputConfig: IOuputSpiritConfig) => any;
+  handleResize?: (spirit: Spirit, ouputConfig: IOuputSpiritConfig) => void;
+  handleMoved?: (spirit: Spirit, ouputConfig: IOuputSpiritConfig) => void;
   handleDrop?: (event: DragEvent, offset: {
     x: number;
     y: number;
   }) => void;
   scrrenType?:ScrrenType;
+  scale: number;
 }
 ```
 :::tip
@@ -69,7 +71,7 @@ export interface ISpiritParams {
   top: number;
   right: number;
   bottom: number;
-  handleResize: (ouput: IOuputConfig) => void;
+  handleResize: (ouput: IOuputSpiritConfig) => void;
   ext: any;
   children?: ISpiritParams[];
 }
@@ -123,13 +125,29 @@ dragLayout.updateAllStyle()
 ```
 
 ### getInfo
-- 类型: <T = IOuputConfig>() => T[]
+- 类型: `<T = IOuputSpiritConfig>() => IOuputConfig<T>`
 - 详情: <br>
-  获取所有容器的信息，不配置`infoDataBridge`的情况下默认返回容器的`ouputConfig`列表,配置`infoDataBridge`之后会返回处理过`ouputConfig`之后的值
+  获取屏幕配置和所有容器的信息，不配置`infoDataBridge`的情况下默认返回容器的`ouputConfig`列表,配置`infoDataBridge`之后会返回处理过`ouputConfig`之后的值
+#### IOuputConfig声明
+```typescript
+export interface IOuputConfig {
+  threshold: number;
+  adsorptionThreshold: number;
+  adsorption: boolean;
+  firstScreenHeight: number;
+  screenWidth: number;
+  scrrenType: ScrrenType;
+  scale: number;
+  spirits: IOuputSpiritConfig[];
+}
+```
 - 示例:
 ```typescript
 dragLayout.getInfo()
 ```
+:::tip
+IOuputSpiritConfig对应的类型: [IOuputSpiritConfig](#spirit实例属性)
+:::
 
 ### loadSpirits
 - 类型: (list: ISpiritParams) => void
@@ -139,6 +157,9 @@ dragLayout.getInfo()
 ```typescript
 draglayout.loadSpirits(list)
 ```
+:::tip
+[ISpiritParams声明](#addspirit的option声明)
+:::
 
 ### switchScrrenMode
 - 类型: (type: ScrrenType) => void
@@ -152,9 +173,15 @@ draglayout.switchScrrenMode(type)
 用到的枚举: [ScrrenType](#scrrentype)
 :::
 
-:::tip
-[ISpiritParams声明](#ispiritparams)
-:::
+### setScale
+- 类型: (val: number) => void
+- 详情:<br>
+  设置屏幕的缩放比例
+- 示例:
+```typescript
+draglayout.setScale(0.8)
+```
+
 
 ## spirit实例方法
 ### setResizable
@@ -178,7 +205,7 @@ spirit.updateStyle()
 
 ## spirit实例属性
 ### ouputConfig
-- 类型: IOuputConfig
+- 类型: IOuputSpiritConfig
 - 详情:<br>
   获取容器的相关属性
 - 属性:

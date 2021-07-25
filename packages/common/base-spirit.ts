@@ -1,6 +1,10 @@
 import { SpiritType } from "../enums";
 import { ContainerSpirit } from "../spirit/base-container-spirit";
-import { IOuputConfig, ISpiritConfig, ISpiritParams } from "../types/config";
+import {
+  IOuputSpiritConfig,
+  ISpiritConfig,
+  ISpiritParams
+} from "../types/config";
 import { DragLayout } from "../index";
 import { Base } from "./base";
 let uid = 0;
@@ -94,7 +98,7 @@ export class BaseSpirit extends Base {
     return this.parentSpirit?.clientWidth || this.globalConfig.screenWidth;
   }
 
-  get ouputConfig(): IOuputConfig {
+  get ouputConfig(): IOuputSpiritConfig {
     const { clientWidth, clientHeight, type } = this;
     const offset = this.getPosition();
     const screenWidth = this.globalConfig.screenWidth;

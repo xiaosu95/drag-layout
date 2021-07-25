@@ -9,10 +9,10 @@ export interface IBaseData {
   width: number;
   height: number;
 }
-export interface IOuputConfig extends IBaseData {
+export interface IOuputSpiritConfig extends IBaseData {
   type: SpiritType;
   resizable: boolean;
-  children?: IOuputConfig[];
+  children?: IOuputSpiritConfig[];
   ext: any;
   percentage: IBaseData;
 }
@@ -33,7 +33,7 @@ export interface ISpiritParams {
   top: number;
   right: number;
   bottom: number;
-  handleResize: (ouput: IOuputConfig) => void;
+  handleResize: (ouput: IOuputSpiritConfig) => void;
   ext: any;
   children?: ISpiritParams[];
   isScrrenBaseContainer?: boolean; // 是否为屏幕基础容器
@@ -54,11 +54,17 @@ export interface IScreenConfig {
   top: number;
 }
 
-export interface IParams {
+/** 配置文件属性 */
+interface IConfigAttributes {
   threshold: number;
   adsorptionThreshold: number;
   adsorption: boolean;
   firstScreenHeight: number;
+  screenWidth: number;
+  scrrenType: ScrrenType;
+  scale: number; // 缩放
+}
+export interface IParams extends IConfigAttributes {
   handleDrop: (
     event: DragEvent,
     offset: {
@@ -66,14 +72,15 @@ export interface IParams {
       y: number;
     }
   ) => void;
-  screenWidth: number;
-  infoDataBridge?: (info: IOuputConfig) => any;
-  handleResize?: (spirit: Spirit, ouput: IOuputConfig) => void;
-  handleMoved?: (spirit: Spirit, ouput: IOuputConfig) => void;
-  scrrenType: ScrrenType;
-  scale?: number; // 缩放
+  infoDataBridge?: (info: IOuputSpiritConfig) => any;
+  handleResize?: (spirit: Spirit, ouput: IOuputSpiritConfig) => void;
+  handleMoved?: (spirit: Spirit, ouput: IOuputSpiritConfig) => void;
 }
 
 export interface IConfig extends IParams {
   editMode: EditMode;
+}
+
+export interface IOuputConfig<T> extends IConfigAttributes {
+  spirits: T[];
 }

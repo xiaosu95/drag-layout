@@ -136,7 +136,7 @@ console.log(info)
 ```typescript
 new DragLayout(boxEle, {
   screenWidth: 375,
-  infoDataBridge: (config: IOuputConfig) => {
+  infoDataBridge: (config: IOuputSpiritConfig) => {
     const _config = { ...config }
     _config.width *= 10
     _config.height *= 10
@@ -191,4 +191,11 @@ const dragLayout = new DragLayout(boxEle, {
   },
 })
 dragLayout.loadSpirits(config.list)
+```
+
+## 设置屏幕缩放比例
+- 描述: 通过设置屏幕的缩放比例可以更好显示不同屏幕尺寸下的内容
+- 示例:
+```typescript
+dragLayout.setScale(0.7)
 ```

@@ -1,26 +1,6 @@
-# 使用指南
-## 初始化
-```html
-<template>
-  <div class="boxEle"></div>
-</template>
-```
+# DragLayout
+## 描述
 
-```javascript
-import { DragLayout } from "dragLayout";
-
-const boxEle = document.querySelector('.boxEle')
-const dragLayout = new DragLayout(boxEle, {
-  screenWidth: 375,
-  handleResize(spirit, ouputConfig) {
-    // ...
-  },
-  handleMoved(spirit, ouputConfig) {
-    // ...
-  },
-  handleDrop(event, offset) {
-    // ...
-  },
-})
-```
-> 通过DragLayout创建实例，
+该插件提供的功能是为了低代码平台或数据平台等布局的平台提供拖拽布局功能，是物料到成品之间的中间件。
+## 示例
+[基础集成示例](https://www.suyuanli.cn/example/drag-layout)
