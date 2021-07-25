@@ -1,6 +1,6 @@
 {
   "name": "drag-layout",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "private": false,
   "main": "./dist/drag-layout.umd.js",
   "typings": "./types/index.d.ts",
@@ -13,7 +13,8 @@
     "lib": "vue-cli-service build --target lib --name drag-layout packages/index.ts",
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs",
-    "types": "tsc -p ./packages"
+    "types": "tsc -p ./packages",
+    "publish": "npm run types & npm publish"
   },
   "homepage": "https://doc.suyuanli.cn/drag-layout/",
   "keywords":["drag", "scrren"],

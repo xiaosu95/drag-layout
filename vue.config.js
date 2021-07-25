@@ -19,7 +19,7 @@ module.exports = {
         raw: true
       });
   },
-  publicPath: "/example/drag_layout",
+  publicPath: "/example/drag-layout",
   configureWebpack: {
     output: {
       libraryExport: "default"
