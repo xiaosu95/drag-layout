@@ -8,19 +8,18 @@ export class Panel extends Base {
     return this.dragLayout.scrren;
   }
 
+  get style() {
+    return `
+      transform: scale(${this.globalConfig.scale});
+    `;
+  }
+
   constructor(el: HTMLDivElement, dragLayout: DragLayout) {
     super(dragLayout);
-    this.initRender();
     el.appendChild(this.el);
     this.el.className = "drag_layout_pannel";
     this.initEvent();
-  }
-
-  initRender() {
-    this.el.innerHTML = `
-      <div class="drag_layout_top_bar"></div>
-      <div class="drag_layout_left_bar"></div>
-    `;
+    this.setScale();
   }
 
   initEvent() {
@@ -57,5 +56,14 @@ export class Panel extends Base {
         document.onmousemove = document.onmouseup = null;
       };
     };
+  }
+
+  setScale(val: number = this.globalConfig.scale) {
+    this.globalConfig.scale = val;
+    this.el.setAttribute("style", this.style);
+  }
+
+  getScale() {
+    return this.globalConfig.scale;
   }
 }

@@ -71,6 +71,7 @@ export interface IParams {
   handleResize?: (spirit: Spirit, ouput: IOuputConfig) => void;
   handleMoved?: (spirit: Spirit, ouput: IOuputConfig) => void;
   scrrenType: ScrrenType;
+  scale?: number; // 缩放
 }
 
 export interface IConfig extends IParams {

@@ -28,6 +28,18 @@
             >
             </el-switch>
           </div>
+          <div>
+            <span style="font-size:12px;">缩放比例:</span>
+            <el-input-number
+              size="mini"
+              v-model="scale"
+              :precision="1"
+              :step="0.1"
+              :max="2"
+              :min="0.5"
+              @change="handleScale"
+            ></el-input-number>
+          </div>
           <el-divider content-position="left">容器库</el-divider>
           <div class="containers_box">
             <div class="containers">
@@ -140,6 +152,7 @@ export default class App extends Vue {
   adsorption = true;
   dragLayout: DragLayout;
   scrrenType = ScrrenType.BLOCK_CONTAINER;
+  scale = 1;
   mounted() {
     this.dragLayout = new DragLayout(this.$refs.boxEle as HTMLDivElement, {
       screenWidth: 750,
@@ -341,6 +354,10 @@ export default class App extends Vue {
 
   switchScrrenMode(val: any) {
     this.dragLayout.switchScrrenMode(Number(val));
+  }
+
+  handleScale(val: number) {
+    this.dragLayout.setScale(val);
   }
 }
 </script>

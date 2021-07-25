@@ -30,7 +30,8 @@ class DragLayout {
     firstScreenHeight: 700,
     screenWidth: 375,
     scrrenType: ScrrenType.BLOCK_CONTAINER,
-    handleDrop: () => null
+    handleDrop: () => null,
+    scale: 1
   };
   private _activeSpirit: Spirit;
   constructor(boxEle: HTMLDivElement, config: Partial<IParams> = {}) {
@@ -192,6 +193,10 @@ class DragLayout {
   switchScrrenMode(type: ScrrenType) {
     this.scrren?.setBoxSpirit(type);
     this.config.scrrenType = type;
+  }
+  // 设置缩放比例
+  setScale(val = this.config.scale) {
+    this.panel.setScale(val);
   }
 }
 

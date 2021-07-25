@@ -7,6 +7,7 @@ export class Coordinates extends Base {
   precision = 10;
   lastXLength = 0;
   lastYLength = 0;
+  blankSize = 25;
 
   get calibrationXNum() {
     return Math.ceil(this.screen.clientWidth / this.precision) + 1;
@@ -44,7 +45,7 @@ export class Coordinates extends Base {
           ${Array(xNum)
             .fill("")
             .map((_, idx) => {
-              const x = this.precision * idx + 25;
+              const x = this.precision * idx + this.blankSize;
               let str = `<line x1="${x}" y1="12" x2="${x}" y2="${
                 !(idx % 5) ? "20" : "18"
               }" style="stroke:#aaa;stroke-width:1" />`;
@@ -69,7 +70,7 @@ export class Coordinates extends Base {
           ${Array(yNum)
             .fill("")
             .map((_, idx) => {
-              const y = this.precision * idx + 25;
+              const y = this.precision * idx + this.blankSize;
               let str = `<line y1="${y}" x1="40" y2="${y}" x2="${
                 !(idx % 5) ? "48" : "46"
               }" style="stroke:#aaa;stroke-width:1" />`;
@@ -89,13 +90,13 @@ export class Coordinates extends Base {
     this.xEl.setAttribute(
       "style",
       `
-      transform: translateX(${this.screen.config.left + 30 - 25}px);
+      transform: translateX(${this.screen.config.left - this.blankSize + 5}px);
     `
     );
     this.yEl.setAttribute(
       "style",
       `
-      transform: translateY(${this.screen.config.top + 30 - 25}px);
+      transform: translateY(${this.screen.config.top - this.blankSize + 5}px);
     `
     );
   }
