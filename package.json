@@ -15,6 +15,12 @@
     "docs:build": "vuepress build docs",
     "types": "tsc -p ./packages"
   },
+  "homepage": "https://doc.suyuanli.cn/drag-layout/",
+  "keywords":["drag", "scrren"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xiaosu95/drag-layout"
+  },
   "dependencies": {
   },
   "devDependencies": {

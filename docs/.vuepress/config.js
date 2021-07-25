@@ -4,7 +4,7 @@ module.exports = {
   themeConfig: {
     sidebar: "auto",
     smoothScroll: true,
-    repo: 'https://xiaosu95.coding.net/p/page-drag-layout/d/page-drag-layout/git',
+    repo: 'https://github.com/xiaosu95/drag-layout',
     nav: [
       { text: '使用指南', link: '/guide.html' },
       { text: 'API', link: '/api.html' },
